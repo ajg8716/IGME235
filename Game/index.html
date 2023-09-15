@@ -2,8 +2,14 @@
 
 <html>
 <head>
-	<link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
-	<link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
+	<!-- favicon -->
+	<link rel="icon" href="taizo_hori.ico" type="image/x-icon">
+
+
+	<!-- adding the fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Kanit:wght@600&family=Press+Start+2P&display=swap" rel="stylesheet">
 
 	<header>
 		<title>Dig Dug</title>
@@ -37,27 +43,64 @@
 
 		h1 {
 			color: red;
-			font-family: sans-serif;
+			text-decoration: underline;
+			font-family: 'Press Start 2P', cursive;
 			border-bottom: 1px solid blue;
+			margin-left: 15px;
+			font-size: 1.5rem;
+		}
+
+		h2{
+			color: blue;
+			border-bottom: 1px red;
+			font-family:'Press Start 2P', cursive;
+			margin-left: 25px;
+			font-size: 1rem
 		}
 
 		blockquote {
 			background-color: lightgray;
 			padding: 1rem;
 		}
+
+		body{
+			background-color: lightblue;
+			font-family: Arial, Helvetica, sans-serif;
+		}
+
+		p{
+			margin-left: 50px;
+			line-height: 1.5;
+		}
+
+		img.side{
+			float: right;		
+			margin: 0 12px;
+		}
+
+		* {
+			border: solid gray 1px;
+		}
+
+		/*img{
+			float: right;
+			margin: 0 12px;
+		}*/
+
+
 	</style>
 
 </head>
 
-<body style="background-color:lightblue;">
+<body>
 	<main>
 		<img src="images/dig-dug.png" alt="Dig Dug Logo" width="450" height="135" />
 		<br /><h1></h1>
 
-		<img src="images/dig-dug-burnt.png" alt="Dig Dug Screen Shot" width="500" height="500" />
+		<img src="images/dig-dug-burnt.png" alt="Dig Dug Screen Shot" class="side" width="500" height="500" />
 
 		<br /><a href="big/pic1.html">Game Photo</a>
-
+		
 		<h2>
 			Published by: Atari, Inc.<br />
 			Developed by: <div class="tooltip">NAMCO<span class="tooltiptext">Nakamura Manufacturing Company</span></div> Limited<br />
@@ -71,18 +114,17 @@
 
 		<h1>Game Categories</h1>
 
-		<p>
+		<p >
 			<b>Genre:</b> Action<br />
 			<b>Perspective:</b> Side view<br />
-			<b>Visual: Fixed</b><br />
-			Gameplay: Arcade
+			<b>Visual:</b> Fixed<br />
+			<b>Gameplay:</b> Arcade
 		</p>
 
 	</main>
 	<footer>
 		<p>
-			Quote
-
+			<h1>Quote</h1>
 			<blockquote><em><q>This definitely goes under the heading of "Games That Were Made While a Programmer Was on Drugs," or at least had a good imagination. And maybe they were into horror movies too.</q></em></blockquote>
 			-- https://www.mobygames.com/mobyrank/source/sourceId,540/
 		</p>
