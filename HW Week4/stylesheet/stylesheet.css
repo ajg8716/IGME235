@@ -1,0 +1,85 @@
+body
+{
+    background-color: rgb(50, 51, 99);
+    font-family: sans-serif;
+    color: white;
+
+}
+
+h1
+{
+    font-family: "Play", sans-serif;
+    font-size: 50px;
+    text-align: center;
+}
+
+h2
+{
+    font-family: "Play", sans-serif;
+    font-size: 30px;
+    text-align: center;
+}
+
+a
+{
+    font-family: "Play", sans-serif;
+    color: white;
+    padding: 3px;
+}
+
+blockquote.bio
+{
+    box-sizing: border-box;
+    max-width: 800px;
+    background-color: rgb(27, 27, 49);
+    padding: 15px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-color: blue;
+    line-height: 25px;
+}
+img.self
+{
+    padding: 25px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgb(27, 27, 49);
+}
+
+li#projects
+{
+    line-height: 30px;
+    list-style-type: none;
+}
+
+p
+{
+    text-align: center;
+}
+ul
+{
+    box-sizing: border-box;
+    width: 200px;
+    
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+    text-align: center;
+}
+
+a#restylink
+{
+    box-sizing: border-box;
+    border: 2px solid rgb(27, 27, 49);
+    background-color: rgb(27, 27, 49);
+    width: 150px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 3px;
+    text-align: center;
+    text-decoration:none;
+}
