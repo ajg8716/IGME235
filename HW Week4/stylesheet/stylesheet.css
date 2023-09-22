@@ -6,7 +6,7 @@ body
 
 }
 
-h1
+h1#header
 {
     font-family: "Play", sans-serif;
     font-size: 50px;
@@ -39,7 +39,7 @@ blockquote.bio
     border-color: blue;
     line-height: 25px;
 }
-img.self
+img#self
 {
     padding: 25px;
     display: block;
@@ -70,7 +70,7 @@ ul
     text-align: center;
 }
 
-a#restylink
+a.restylink
 {
     box-sizing: border-box;
     border: 2px solid rgb(27, 27, 49);
