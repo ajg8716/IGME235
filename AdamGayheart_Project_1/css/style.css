@@ -1,2 +1,58 @@
 /* style sheet for spec.html */
 
+
+
+#wrapper{
+    display: grid;
+    height: 100vh;
+    grid-template-columns: 5vw 40vw 10vw 45vw;
+    grid-template-rows: 15vh 15vh 30vh 40vh;
+    grid-template-areas: "intel blah blah blah"
+                         "hiking hiking hiking hiking"
+                         "blah excite blah blah"
+                         "blah blah blah inteloffers";                          
+    margin: 2vh auto;
+}
+
+#intel{
+    align-self: left;
+    width: 1vw;
+    height: 1vw;
+    grid-area: intel;
+}
+
+#hike{
+    align-self: center;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    grid-area: hiking;
+}
+
+#excite{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 3vw;
+    text-align: left;
+    color: white;
+    padding-top: 2vw;
+    padding-left: 3mm;
+    padding-bottom: 10vh;
+    background-color: rgb(256, 0, 0, .5);
+    width: 15vw;
+    height: auto;
+    grid-area: excite;
+}
+
+#inteloffers{
+    font-family:Arial, Helvetica, sans-serif;
+    border: 1pt solid black;
+    width: 40vw;
+    height: 10vw;
+    grid-area: inteloffers;
+}
+
+html,
+body {
+    margin-left: 10vw;
+    margin-right: 10vw;
+}
