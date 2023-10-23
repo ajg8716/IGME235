@@ -1,116 +1,150 @@
 /* style sheet for spec.html */
+
 strong{
     font-weight: bolder;
 }
 
-#intro{
-    display: grid;
-    grid-template-columns: repeat(10, 5.5%);
-    grid-template-rows: 5% 10vw 30%; 
-    margin: 1vh 20vw;                     
+h1{
+    font-family: IBM Plex Mono, Arial, Helvetica, sans-serif;
+    font-size: 2vw;
 }
 
- .elm{
+.text{
+    padding: 5%;
+    line-height: 150%;
+    text-indent: 4cap;
+    font-size: 1vw;
+}
+
+#intro{
+    display: grid;
+    grid-template-columns: repeat(10, 7%);
+    grid-template-rows: 15vw 1fr 3fr; 
+    margin: 0px 10vw;
+    margin-top: 0px;                     
+}
+
+#intro h1{
+    margin-left: 1cap;
+    font-size: 4vw;
+    margin-bottom: 0%;
+    font-size: 4vw;
+}
+
+#intro .text{
+    padding-top: 0%;
+}
+
+body{
+    margin: 0px
+}
+
+.elm{
     font-family:Arial, Helvetica, sans-serif;
     overflow: visible;
 }
 
-#intel{
+#self{
     grid-row: 1;
-    grid-column: 1/span2;
-
-}
-
-#hike{
-    grid-row: 2;
-    grid-column: 1/span 11; 
+    grid-column: 1/span 14; 
     z-index: -1;
 }
 
-#excite{
-    font-size: 4vw;
-    color: white;
-    padding: 10px;
-    background-color: rgb(224, 79, 98, .5);
-    grid-column: 2/span 7;
-    grid-row: 3/span 2;
-}
-
-#inteloffers {
-    background-color: white;
-    grid-row: 4/span 2;
-    grid-column: -1/span 1;
-}
-
-#intel img{
-    width: 50px;
-    height: 50px;
-}
-
-@media screen and (min-width: 1100px){
-    #intel img{
-        width: 100px;
-        height: 100px;
-    }
-}
-
-#hike img{
-    width: 60vw;
+#self img{
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
 }
 
-#benefits{
-    display: flex;
-    flex-direction: row;
-    margin: 0vh 20vw;
-    padding: 10px 0px;
+#motto{
+    color: white;
+    padding: 20px;
+    background-color: rgb(224, 79, 98, .5);
+    grid-column: 2/span 5;
+    grid-row: 2/span 2;
 }
 
-.elm1{
+#motto h1{
+    font-size: 6vw;
+    line-height: 130%;
+    margin-left: 0px;
+    margin-top: 10px;
+}
+
+#personalstate {
+    background-color: white;
+    grid-row: 3/span 2;
+    grid-column: 9/span 3;
+}
+
+#aboutme{
+    display: flex;
+    flex-direction: row;
+    margin: 0vh 10vw;
+    padding: 2vw 0px;
     font-family: Arial, Helvetica, sans-serif;;
     font-size: 1.2vw;
 }
 
-#vaca{
+#education{
     display: block;
-    width: 40%;
+    width: 35%;
     color: black;
 }
-#vaca img{
+#education img{
     float: left;
-    padding-right: 5px;
+    padding-right: 10px;
     width: 6vw;
     height: 6vw;
 }
 
-#bonus{
-    text-align: center;
+#languages{
     margin: auto;
     display: block;
-    padding: 40px 15px;
+    padding: 0px 20px;
     background-color: rgb(0, 119, 255);
     color: white;
-    width: 20%;
-
-}
-
-#shuttle{
-    display: block;
     width: 25%;
 }
 
-#shuttle img{
-    float: right;
-    width: 6vw;
-    height: 6vw;
+#languages .text{
+    text-indent: 0%;
+    padding: 0%;
+    margin-left: 2cap;
 }
 
-#about{
+#softskills{
+    display: block;
+    width: 20%;
+}
+
+#softskills .text{
+    text-indent: 0%;
+}
+
+#skillsandwork{
+    text-align: center;
+    background-color: rgb(224, 79, 98);
+    color: white;
+    padding: 10px 0px;
+}
+
+#personalwork{
     display: grid;
-    grid-template-rows: 1.3fr .1fr .5fr .2fr .4fr .1fr .3fr .1fr .5fr .7fr .4fr;
+    grid-template-rows: 1fr .1fr 1fr .15fr .4fr .1fr .3fr .1fr;
     grid-template-columns: 5fr 1.5fr .3fr 2.5fr .3fr 1.4fr .3fr 2fr 2fr 2fr 2fr 1.5fr ;
-    margin: 0vh 20vw;
+    margin: 0vh 10vw;
+    padding-bottom: 5%;
+    height: 50%;
+}
+
+#personalwork .text{
+    text-indent:0%;
+    padding: 5px 10px;
+}
+
+#personalwork h1{
+    text-align: center;
 }
 
 .elm3{
@@ -118,7 +152,7 @@ strong{
     font-size: 1.2vw;
     overflow: visible;
 }
-#work{
+#gamedes{
     display:block;
     color:  white;
     background-color: rgb(224, 79, 98);
@@ -127,40 +161,45 @@ strong{
     z-index: -1;
 }
 
-.text{
-    padding: 5%;
-}
-
-#work .computerguy{
+#gamedes .gamesample{
     width: 100%;
 }
 
-.computerguy img{
+.gamesample img{
     width: 100%;
-    height: auto;;
+    height: auto;
 }
 
-#model{
+#adobe{
     display: block;
-    color: black;
-    background-color: rgb(15, 199, 255);
+    color: white;
+    background-color: rgb(0, 119, 255);
     grid-column: 4/ span 3; 
     grid-row: 1/ span 5;
 }
 
-#charity{
+#adobe img{
+    width: 100%;
+    height: auto;
+    padding-bottom: 0px;
+}
+#adobe .text{
+    padding-top: 0%;
+}
+
+#animation{
     display: block;
     color: white;
     background-color: rgb(0, 119, 255);
     grid-column: 8/ span 3;
     grid-row: 1;
 }
-#charity p{
+#animation p{
     text-align: left;
     vertical-align: middle;
 }
 
-#tuition{
+#assets{
     display: block;
     color: white;
     background-color: rgb(224, 79, 98);
@@ -168,62 +207,94 @@ strong{
     grid-row: 3/ span 3;
 }
 
-#recognise{
+#collab{
     display: block;
-    color:black;
-    background-color: white;
+    color:white;
+    box-shadow: white 0px 0px 0px 1vw;
+    background-color: rgb(224, 79, 98);
     grid-column: 1;
     grid-row: 5/ span 5;
 }
 
-#stock{
+#engines{
     display: block;
-    box-shadow: white 0px 0px 0px 10px;
+    box-shadow: white 0px 0px 0px 1vw;
     color: white;
-    background-color: rgb(0, 119, 255);
+    background-color: rgb(224, 79, 98);
     grid-column: 2/ span 3;
     grid-row: 4/span 4;
     z-index: 2;
 }
 
-#match{
+#htmlandcss{
     display:block;
     color: white;
-    background-color: rgb(224, 79, 98);
+    box-shadow: white 0px 0px 0px 1vw;
+    background-color: rgb(0, 119, 255);
     grid-column: 2 / span 3;
     grid-row: 9;
 }
 
-#headphones {
-    grid-column: 6/ span 4;
+ #personal{
+    display:block;
+    color: white;
+    background-color: rgb(0, 119, 255);
+    grid-column: 6/span 7;
     grid-row: 7/ span 3;
+ }
+
+ footer{
+    background-color: rgb(175, 175, 175);
+    margin: 0vw;
+ }
+ #contact{
+    line-height: 160%;
+ }
+ #contact h1{
+    text-align: center;
+ }
+ #contact ul{
+    padding: 10px
+ }
+ #contact li{
+    color: black;
+    text-align: center;
+    list-style-type: none;
+    text-indent: 0%;
+ }
+ #contact a{
+    color:rgb(0, 117, 153);
+    text-decoration: none;
+ }
+
+ @media screen and (max-width: 1100px){
+    body{
+        margin: 0px;
+    }
+
+    #intro{
+        margin: 0px;
+        grid-template-rows: 20vw 1fr 3fr; 
+        height: 30%;
+    }
+
+    #motto h1{
+        font-size: 8vw;
+        margin-top: 0%;
+    }
+
+    #personalstate{
+        grid-column: 8/span 4;
+    }
+
+    .text{
+        font-size: 1.5vw;
+    }
+
+    #about{
+        height: 40%;
+    }
 }
 
- #headphones img{
-    width: 100%;
-    height: auto;
- }
-
- #medical{
-    display:block;
-    color: black;
-    background-color: white;
-    grid-column: 10/span 3;
-    grid-row: 7/ span 3;
- }
-
- #find{
-    display: block;
-    color: black;
-    background-color: white;
-    grid-column:3/ span 10;
-    grid-row: 10;
- }
-
- #find a{
-    font-weight: bold;
-    text-decoration: none;
-    color: rgb(0, 119, 255);
- }
 
 
