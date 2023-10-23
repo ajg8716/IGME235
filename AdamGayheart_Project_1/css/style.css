@@ -27,6 +27,11 @@ h1{
     font-size: 2vw;
 }
 
+h2{
+    font-family: IBM Plex Mono, Arial, Helvetica, sans-serif;
+    font-size: 2vw;
+}
+
 .text{
     padding: 5%;
     line-height: 150%;
@@ -161,7 +166,7 @@ body{
     padding: 5px 10px;
 }
 
-#personalwork h1{
+#personalwork h2{
     text-align: center;
 }
 
@@ -268,7 +273,7 @@ body{
  #contact{
     line-height: 160%;
  }
- #contact h1{
+ #contact h2{
     text-align: center;
  }
  #contact ul{
