@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="eng">
+<head>
+    <meta charset="utf-8"/>
+    <title>Random-Phrases</title>
+    <style>
+        body{
+            background-color: rgb(12, 111, 124);
+            font-family:Arial, Helvetica, sans-serif;
+            text-align: center;
+        }
+        header{
+            background-color: rgba(8, 73, 82, 0.438);
+            color: white;
+            padding: 20px;
+        }
+        #quote{
+            font-size: 18pt;
+            background-color: rgba(3, 39, 44, 0.438);
+            margin-top: 20vh;
+            color: rgb(8, 231, 8);
+        }
+        #container-quotes{
+            background-image: url(images/Jonesy.webp);
+            padding: 5px;
+            background-size: cover;
+            height: 50vw;
+            width: 50vw;
+            margin: auto;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background: #0077b6;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: rgb(8, 231, 8);
+        }
+        button:active {
+            background: rgb(139, 255, 139);
+        }
+    </style>
+</head>
+<body>
+=
+    <div id="container-quotes">
+        <header>
+            <h1>Fortnite Rizz Generator</h1>
+        </header>
+        <p id="quote"></p>
+        <button id="button">New Rizz Quote</button>
+    </div>
+
+    <script>
+        const phrases = [
+            "Are you a Chug Jug? Because you're my lifeline in this crazy world.",
+            "Are you a boogie bomb? Because you've got me dancing uncontrollably.",
+            "Are you a bush? Because you've got me hiding my feelings for you.",
+            "Is your name Loot Lake? Because I'm ready to dive into the depths of your heart.",
+            "Are you a Battle Pass? Because I'd pay real V-Bucks for a date with you.",
+            "Are you a heavy sniper rifle? Because you've just pierced through my defenses.",
+        ];
+
+        function showQuote() {
+            const randPos = Math.floor(Math.random() * phrases.length);
+            const randPhrase = phrases[randPos];
+            document.getElementById("quote").textContent = randPhrase;
+        }
+
+        document.getElementById("button").addEventListener("click", showQuote);
+
+        showQuote();
+    </script>
+</body>
+</html>
