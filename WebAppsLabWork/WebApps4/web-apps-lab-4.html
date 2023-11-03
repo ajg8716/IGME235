@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Web Apps-4-HW</title>
+	<style>
+		body{border:1px solid gray;}
+	</style>
+</head>
+<body>
+<h1>My Favorites</h1>
+<h2>My Favorite Colors</h2>
+
+<ol id="colorsList">
+	
+</ol>
+
+<h2>My Favorite Foods</h2>
+
+<ol id="foodsList">
+	
+</ol>
+
+<h2>My Favorite Links</h2>
+
+<ol id="linksList">
+	
+</ol>
+
+<script>
+"use strict";
+let colors = ["red","green","blue","purple","pink"];
+let foods = ["spaghetti", "pizza", "sirloin steak"]; // add some foods
+
+// Optional - can you figure out how to pull both the key AND the value
+// from the `links` object literal?
+let links = {
+		"RIT": "http://www.rit.edu",
+		"RWAG" : "https://www.facebook.com/RWAGclub",
+		"New Media Club" : "http://newmediaclub.cias.rit.edu"
+	}
+
+
+function createList(listElement,array){
+    // you write the rest
+    let list = document.getElementById(listElement);
+    for(let i=0; i<array.length; i++){
+        let item = document.createElement("li");
+        item.textContent = array[i];
+        list.appendChild(item);
+    }
+}
+
+createList("colorsList", colors);
+
+createList("foodsList", foods);
+
+let linkList = document.getElementById("linksList");
+for(const key in links){
+    if(links.hasOwnProperty(key)){
+        let linkItem = document.createElement("li");
+        let a = document.createElement("a");
+        a.href = links[key];
+        a.textContent = key;
+        linkItem.appendChild(a);
+        linkList.appendChild(linkItem);
+    }
+}
+</script>
+</body>
+</html>
