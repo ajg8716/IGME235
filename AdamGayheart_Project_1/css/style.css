@@ -1,4 +1,8 @@
 /* style sheet for spec.html */
+body{
+    background-color: rgb(27, 41, 65);
+}
+
 #navbar{
     display: flex;
     position: fixed;
@@ -10,7 +14,7 @@
     font-family: IBM Plex Mono, Arial, Helvetica, sans-serif;
     font-size: 1.2vw;
     display: block;
-    background-color: rgb(0, 119, 255);
+    background-color: #171715;
     border: 1px solid white;
     color: white;
     padding: 10px 1vw ;
@@ -29,7 +33,7 @@ h1{
 
 h2{
     font-family: IBM Plex Mono, Arial, Helvetica, sans-serif;
-    font-size: 2vw;
+    font-size: 25pt;
 }
 
 .text{
@@ -39,23 +43,25 @@ h2{
     font-size: 1vw;
 }
 
-#intro{
+#intro {
     display: grid;
     grid-template-columns: repeat(10, 7%);
-    grid-template-rows: 15vw 1fr 3fr; 
-    margin: 0px 10vw;
-    margin-top: 0px;                     
+    grid-template-rows: 15vw 1fr 3fr 1fr; 
+    margin: 0px auto;
+    margin-top: 0px;   
+    max-width: 1280px;    
+    max-height: 1000px;              
 }
 
 #intro h1{
     margin-left: 1cap;
-    font-size: 4vw;
+    font-size: 42pt;
     margin-bottom: 0%;
-    font-size: 4vw;
 }
 
 #intro .text{
     padding-top: 0%;
+    font-size: 12pt;
 }
 
 body{
@@ -69,7 +75,7 @@ body{
 
 #self{
     grid-row: 1;
-    grid-column: 1/span 14; 
+    grid-column: 1/span all; 
     z-index: -1;
 }
 
@@ -82,20 +88,21 @@ body{
 #motto{
     color: white;
     padding: 20px;
-    background-color: rgb(224, 79, 98, .5);
+    background-color: rgb(255, 105, 0, .5);
     grid-column: 2/span 5;
     grid-row: 2/span 2;
 }
 
 #motto h1{
-    font-size: 6vw;
+    font-size: 88pt;
     line-height: 130%;
     margin-left: 0px;
     margin-top: 10px;
 }
 
 #personalstate {
-    background-color: white;
+    background-color: #171715;
+    color: white; 
     grid-row: 3/span 2;
     grid-column: 9/span 3;
 }
@@ -103,16 +110,17 @@ body{
 #aboutme{
     display: flex;
     flex-direction: row;
-    margin: 0vh 10vw;
+    margin: 0vh auto;
+    max-width: 1280px;
     padding: 2vw 0px;
     font-family: Arial, Helvetica, sans-serif;;
-    font-size: 1.2vw;
+    font-size: 15pt;
 }
 
 #education{
     display: block;
     width: 35%;
-    color: black;
+    color: white;
 }
 #education img{
     float: left;
@@ -125,7 +133,7 @@ body{
     margin: auto;
     display: block;
     padding: 0px 20px;
-    background-color: rgb(0, 119, 255);
+    background-color: #715AFF;
     color: white;
     width: 25%;
 }
@@ -139,6 +147,7 @@ body{
 #softskills{
     display: block;
     width: 20%;
+    color: white;
 }
 
 #softskills .text{
@@ -147,7 +156,7 @@ body{
 
 #skillsandwork{
     text-align: center;
-    background-color: rgb(224, 79, 98);
+    background-color: #FF6900;
     color: white;
     padding: 10px 0px;
 }
@@ -178,7 +187,7 @@ body{
 #gamedes{
     display:block;
     color:  white;
-    background-color: rgb(224, 79, 98);
+    background-color: #4642A0;
     grid-column: 1/span 2;
     grid-row: 1 / span 4;
     z-index: -1;
@@ -196,7 +205,7 @@ body{
 #adobe{
     display: block;
     color: white;
-    background-color: rgb(0, 119, 255);
+    background-color: #4642A0;
     grid-column: 4/ span 3; 
     grid-row: 1/ span 5;
 }
@@ -213,7 +222,7 @@ body{
 #animation{
     display: block;
     color: white;
-    background-color: rgb(0, 119, 255);
+    background-color: #715AFF;
     grid-column: 8/ span 4;
     grid-row: 1;
 }
@@ -225,7 +234,7 @@ body{
 #assets{
     display: block;
     color: white;
-    background-color: rgb(224, 79, 98);
+    background-color: #715AFF;
     grid-column: 8/ span 5;
     grid-row: 3/ span 3;
 }
@@ -233,17 +242,17 @@ body{
 #collab{
     display: block;
     color:white;
-    box-shadow: white 0px 0px 0px 1vw;
-    background-color: rgb(224, 79, 98);
+    box-shadow: rgb(27, 41, 65) 0px 0px 0px 1vw;
+    background-color: #4642A0;
     grid-column: 1;
     grid-row: 5/ span 5;
 }
 
 #engines{
     display: block;
-    box-shadow: white 0px 0px 0px 1vw;
+    box-shadow: rgb(27, 41, 65) 0px 0px 0px 1vw;
     color: white;
-    background-color: rgb(224, 79, 98);
+    background-color: #4642A0;
     grid-column: 2/ span 3;
     grid-row: 4/span 4;
     z-index: 2;
@@ -252,8 +261,8 @@ body{
 #htmlandcss{
     display:block;
     color: white;
-    box-shadow: white 0px 0px 0px 1vw;
-    background-color: rgb(0, 119, 255);
+    box-shadow: rgb(27, 41, 65) 0px 0px 0px 1vw;
+    background-color: #715AFF;
     grid-column: 2 / span 3;
     grid-row: 9;
 }
@@ -261,13 +270,14 @@ body{
  #personal{
     display:block;
     color: white;
-    background-color: rgb(0, 119, 255);
+    background-color: #715AFF;
     grid-column: 6/span 7;
     grid-row: 7/ span 3;
  }
 
  footer{
-    background-color: rgb(175, 175, 175);
+    background-color: #171715;
+    color: white;
     margin: 0vw;
  }
  #contact{
@@ -280,34 +290,60 @@ body{
     padding: 10px
  }
  #contact li{
-    color: black;
+    color: white;
     text-align: center;
     list-style-type: none;
     text-indent: 0%;
  }
  #contact a{
-    color:rgb(0, 117, 153);
+    color:rgb(0, 181, 236);
     text-decoration: none;
  }
 
- @media screen and (max-width: 1100px){
-    body{
+
+ @media screen and(max-width: 1280px){
+    #intro{
         margin: 0px;
+        grid-template-columns: repeat(14, 7%);
+        grid-template-rows: 25vw 1fr 1fr 1fr; 
+        height: 50vh;
+    }
+}
+
+ @media screen and (max-width: 530px){
+    h2{
+        font-size: 20pt;
+        text-align: center;
     }
 
     #intro{
         margin: 0px;
-        grid-template-rows: 20vw 1fr 3fr; 
-        height: 30%;
+        grid-template-columns: repeat(14, 7%);
+        grid-template-rows: 25vw 1.5fr .7fr 2fr; 
+        height: 50vh;
+    }
+
+    #intro h1{
+        font-size: 40pt;
+    }
+    
+    #intro .text{
+        font-size: 18pt;
+    }
+
+    #motto{
+        grid-column: 10/ span 5;
     }
 
     #motto h1{
-        font-size: 8vw;
+        font-size: 64pt;
         margin-top: 0%;
     }
 
     #personalstate{
-        grid-column: 8/span 4;
+        grid-column: 1/span all;
+        grid-row: 3/ span 2;
+        z-index: -1;
     }
 
     .text{
@@ -317,7 +353,51 @@ body{
     #about{
         height: 40%;
     }
-}
 
+    #aboutme{
+        flex-direction: column;
+        row-gap: 50px;
+        padding: 10px 5vw;
+    }
+
+    #aboutme .text{
+        line-height: 3cap;
+        text-align: center;
+        font-size: 12pt;
+    }
+
+    #aboutme li{
+        list-style: none;
+    }
+
+    #education{
+        width: 80%;
+        margin: auto;
+    }
+
+    #education img{
+        width: 150px;
+        height: 150px;
+    }
+
+    #education .school{
+        font-size: 12pt;
+        margin-left: 160px;
+    }
+
+    #languages{
+        width: 80%;
+        margin: auto;
+    }    
+
+    #softskills{
+        width: 80%;
+        margin: auto;
+    }
+
+    #personalwork{
+        margin: 0px 0px;
+    }
+}
 
 
