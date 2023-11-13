@@ -12,7 +12,7 @@ body{
 
 .navlinks{
     font-family: IBM Plex Mono, Arial, Helvetica, sans-serif;
-    font-size: 1.2vw;
+    font-size: 18pt;
     display: block;
     background-color: #171715;
     border: 1px solid white;
@@ -139,6 +139,7 @@ body{
 }
 
 #languages .text{
+    font-size: 15pt;
     text-indent: 0%;
     padding: 0%;
     margin-left: 2cap;
@@ -151,6 +152,7 @@ body{
 }
 
 #softskills .text{
+    font-size: 15pt;
     text-indent: 0%;
 }
 
@@ -300,19 +302,9 @@ body{
     text-decoration: none;
  }
 
-
- @media screen and(max-width: 1280px){
-    #intro{
-        margin: 0px;
-        grid-template-columns: repeat(14, 7%);
-        grid-template-rows: 25vw 1fr 1fr 1fr; 
-        height: 50vh;
-    }
-}
-
- @media screen and (max-width: 530px){
+ @media screen and (max-width: 1280px){
     h2{
-        font-size: 20pt;
+        font-size: 32pt;
         text-align: center;
     }
 
@@ -320,7 +312,6 @@ body{
         margin: 0px;
         grid-template-columns: repeat(14, 7%);
         grid-template-rows: 25vw 1.5fr .7fr 2fr; 
-        height: 50vh;
     }
 
     #intro h1{
@@ -350,10 +341,6 @@ body{
         font-size: 1.5vw;
     }
 
-    #about{
-        height: 40%;
-    }
-
     #aboutme{
         flex-direction: column;
         row-gap: 50px;
@@ -363,7 +350,7 @@ body{
     #aboutme .text{
         line-height: 3cap;
         text-align: center;
-        font-size: 12pt;
+        font-size: 24pt;
     }
 
     #aboutme li{
@@ -376,23 +363,30 @@ body{
     }
 
     #education img{
-        width: 150px;
-        height: 150px;
+        width: 100px;
+        height: 100px;
     }
 
     #education .school{
-        font-size: 12pt;
-        margin-left: 160px;
+        font-size: 24pt;
+        margin-left: 120px;
     }
 
     #languages{
         width: 80%;
-        margin: auto;
     }    
+
+    #languages ul{
+        margin: auto;
+    }
 
     #softskills{
         width: 80%;
         margin: auto;
+    }
+
+    #softskills ul{
+        padding: 0px;
     }
 
     #personalwork{
