@@ -22,19 +22,29 @@
 	</div>
 </div>
 
-<div id="resultsNumWrapper">
-	<p>Number of Results: </p>
-	<div class="widgets">
-		<input id="maxNum" type="text" size="20" maxlength="3" autofocus value="" />
-	</div>
+<div class="widgets">
+	Max # results -> 
+	<select id="maxNum">
+		<option value="5">5</option>
+		<option value="10" selected>10</option>
+		<option value="25">25</option>
+		<option value="35">35</option>
+		<option value="50">50</option>
+	</select>
 </div>
+
 <div id="status"></div>
 <hr>
 
-<div id="results">
+<div id="results" style="display: none">
 	<h2>Results</h2>
 	<div id="content">
 	</div>
+</div>
+
+<div id="pagination" style="display: none">
+	<button id="prevButton"><</button>
+	<button id="nextButton">></button>
 </div>
 
 </body>
