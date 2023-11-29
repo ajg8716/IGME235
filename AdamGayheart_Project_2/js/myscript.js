@@ -25,6 +25,8 @@
         console.log(currentPage);
 		console.log("searchButtonClicked() called");
 
+        DisplayCorrectPaginationButtons();
+
         //parse the user entered term we wish to search
         term = document.querySelector("#searchterm").value;
         displayTerm = term.trim();
@@ -56,7 +58,7 @@
         //Pagination
 
         // Show the pagination section after searchButton is clicked
-        document.getElementById('pagination').style.display = 'block';
+        document.getElementById('pagination').style.display = 'flex';
 	}
 
     function getData(url){
@@ -162,6 +164,7 @@
     }
 
     function SearchForMore() {
+        DisplayCorrectPaginationButtons();
         let updatedUrl = `${prevURL}&offset=${(currentPage - 1) * limit}`;
         console.log(updatedUrl);
         getData(updatedUrl);
@@ -189,6 +192,26 @@
           });
           pagination.insertBefore(button, document.getElementById('nextButton'));
           createdButtons.push(button);
+        }
+    }
+
+    function AddAndDisplaySpinner(){
+        //get the status and set it to a const
+        const status = document.querySelector('#status');
+
+        
+    }
+
+    function DisplayCorrectPaginationButtons(){
+        if(currentPage === 1){
+            document.querySelector("#prevButton").style.display = 'none';
+        }
+        else if(currentPage === totalPages){
+            document.querySelector('#nextButton').style.display = 'none';
+        }
+        else{
+            document.querySelector("#nextButton").style.display = 'block';
+            document.querySelector("#prevButton").style.display = 'block';
         }
     }
 
