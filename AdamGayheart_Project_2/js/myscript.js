@@ -3,6 +3,8 @@
     //Public API key
     const GIPHY_KEY = "fthht6g3CLvkaDdFB7AZyAwrqBmV5Jth";
 	
+    let arrayRecSearches = [];
+
 	// 2
 	let displayTerm = "";
 
@@ -22,6 +24,9 @@
 
 	// 3
 	function searchButtonClicked(){
+        // Update the UI
+        AddAndDisplaySpinner();
+        
         console.log(currentPage);
 		console.log("searchButtonClicked() called");
 
@@ -31,11 +36,31 @@
         term = document.querySelector("#searchterm").value;
         displayTerm = term.trim();
 
+        //create a recent search and add it to the dropdown
+        CreateRecentSearch(displayTerm);
+
+        const dropdown = document.getElementById('recentSearches');
+        dropdown.addEventListener('change', function() {
+            // Get the selected option
+            const selectedOption = dropdown.options[dropdown.selectedIndex].textContent;
+
+            // Set the search term to the selected option
+            document.querySelector("#searchterm").value = selectedOption;
+
+            // Update the display term
+            displayTerm = selectedOption.trim();
+        });
+
         //encode spaces and special characters
         term = encodeURIComponent(term);
 
         //if theres no term to search then bail out of the function (return does this)
-        if(term.length < 1) return;
+        if(term.length < 1) {
+            document.querySelector("#status").innerHTML = "Search Bar is Empty";
+            document.getElementById('status').removeChild(document.getElementById('status').firstChild);
+            return;
+        }
+
 
         //grab the user chosen search 'maxNum' from the <select> and append it to the URL
         limit = document.querySelector("#maxNum").value;
@@ -45,20 +70,12 @@
 
         url += `&offset=${(currentPage - 1) * limit}`;
 
-        // Update the UI
-        document.querySelector("#status").innerHTML = `<b>Searching for '${displayTerm}'</b>`;
-
         //see what the url looks like
         console.log(url);
 
         //request data
         getData(url);
         
-        document.getElementById('results').style.display = "block";
-        //Pagination
-
-        // Show the pagination section after searchButton is clicked
-        document.getElementById('pagination').style.display = 'flex';
 	}
 
     function getData(url){
@@ -76,6 +93,13 @@
     }
 
     function dataLoaded(e){
+        //display the results grid
+        document.getElementById('results').style.display = "block";
+
+        //Pagination
+        // Show the pagination section after searchButton is clicked
+        document.getElementById('pagination').style.display = 'flex';
+
         //event.target is the xhr object
         let xhr = e.target;
         //xhjr.responseText is the JSON file we just downloaded
@@ -97,9 +121,6 @@
         totalPages = obj.data.length / limit;
         console.log(totalPages);
 
-        //show all the page numbers at the bottom as buttons
-        //PaginationNumberButtons(totalPages);
-
         //set the start index and end index for the results of the page
         let startIndex = (currentPage - 1) * limit;
         let endIndex = startIndex + limit;
@@ -119,16 +140,13 @@
                 //set the image not found png id not found
                 if(!smallURL) smallURL = "images/no-image-found.png";
 
-                //get the URL to the Giphy page
-                let url = result.url;
-
                 //set the rating
                 let rating = result.rating.toUpperCase();
 
                 //build a <div> to hold each result
-                //ES6 string templating
+                //ES6 string templating replacing view on Giphy with button to copy to Clipboard
                 let line = `<div class='result'><img src='${smallURL}' title='${result.id}'/>`;
-                line += `<span><a target = '_blank' href='${url}'>View on Giphy</a><br><p>Rating: ${rating}</p></span></div>`;
+                line += `<span><button class='copyToClipboard'>Copy to Clipboard</button><p class = 'rating'>Rating: ${rating}</p></span></div>`;
 
                 //add the <div> to the 'bigString' and loop
                 bigString += line;
@@ -140,7 +158,7 @@
         document.querySelector("#content").innerHTML = bigString;
 
         //update the status
-        document.querySelector("#status").innerHTML = "<b>Success!</b><p><i>Here are " + pagResults.length + " results for " + displayTerm + "</i></p>";
+        document.getElementById('status').removeChild(document.getElementById('status').firstChild);
     }
 
     function dataError(e){
@@ -170,36 +188,62 @@
         getData(updatedUrl);
     }
 
-    function createPaginationButtons(totalPages) {
-        const pagination = document.getElementById('pagination');
+    // function createPaginationButtons(totalPages) {
+    //     const pagination = document.getElementById('pagination');
       
-        // Clear existing buttons except the navigation buttons
-        while (pagination.firstChild !== null && pagination.childNodes.length > 2) {
-          if (!createdButtons.includes(pagination.firstChild)) {
-            pagination.removeChild(pagination.firstChild);
-          } else {
-            break; // Stop removing nodes if it encounters a created button
-          }
-        }
+    //     // Clear existing buttons except the navigation buttons
+    //     while (pagination.firstChild !== null && pagination.childNodes.length > 2) {
+    //       if (!createdButtons.includes(pagination.firstChild)) {
+    //         pagination.removeChild(pagination.firstChild);
+    //       } else {
+    //         break; // Stop removing nodes if it encounters a created button
+    //       }
+    //     }
       
-        // Create buttons for new pages
-        for (let i = createdButtons.length + 1; i <= totalPages; i++) {
-          const button = document.createElement('button');
-          button.textContent = i;
-          button.addEventListener('click', () => {
-            currentPage = i;
-            SearchForMore();
-          });
-          pagination.insertBefore(button, document.getElementById('nextButton'));
-          createdButtons.push(button);
+    //     // Create buttons for new pages
+    //     for (let i = createdButtons.length + 1; i <= totalPages; i++) {
+    //       const button = document.createElement('button');
+    //       button.textContent = i;
+    //       button.addEventListener('click', () => {
+    //         currentPage = i;
+    //         SearchForMore();
+    //       });
+    //       pagination.insertBefore(button, document.getElementById('nextButton'));
+    //       createdButtons.push(button);
+    //     }
+    // }
+
+    function CreateRecentSearch(term){
+        for(let i = 0; i < arrayRecSearches.length; i++){
+            if(arrayRecSearches[i] == term){
+                return;
+            }
         }
+        //create a recTerm button 
+        const recTerm = document.createElement('option');
+        //set the text of the term to the input 
+        recTerm.textContent = term;
+        recTerm.className = "searchOptions";
+        //append the button to the drop down
+        document.getElementById('recentSearches').insertBefore(recTerm, document.getElementById('recentSearches').firstChild);
+        arrayRecSearches.push(recTerm.value);
     }
 
     function AddAndDisplaySpinner(){
-        //get the status and set it to a const
-        const status = document.querySelector('#status');
+        //create a const for the spinner and add the src and alt text
+        const spinner = document.createElement('img');
+        spinner.id = "#spinner";
+        spinner.src = "images/spinner.gif";
+        console.log(spinner.src);
+        spinner.alt = "Searching...";
 
-        
+        //append the spinner to the status
+        document.querySelector('#status').appendChild(spinner);
+
+        spinner.onerror = function() {
+            console.error("Failed to load spinner image");
+            // Optionally, take alternative actions like setting a different image or displaying an error message
+        };
     }
 
     function DisplayCorrectPaginationButtons(){
