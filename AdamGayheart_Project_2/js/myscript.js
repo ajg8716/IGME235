@@ -32,8 +32,6 @@
         // Update the UI
         AddAndDisplaySpinner();
 
-        DisplayCorrectPaginationButtons();
-
         //parse the user entered term we wish to search
         term = document.querySelector("#searchterm").value;
         displayTerm = term.trim();
@@ -74,7 +72,6 @@
 
         //request data
         getData(url);
-        
 	}
 
     function getData(url){
@@ -115,6 +112,7 @@
 
         //set the num of total pages
         totalPages = obj.data.length / limit;
+        console.log(totalPages);
 
         //set the start index and end index for the results of the page
         let startIndex = (currentPage - 1) * limit;
@@ -132,7 +130,7 @@
         copiedURLs = [];
 
         //loop through the array of results
-        for (let i=0; i<=limit; i++){
+        for (let i=0; i < limit; i++){
             let result = pagResults[i];
 
             if(result != null){   
@@ -163,53 +161,84 @@
         //check for copy to clipboard button clicks
         CheckforCopyClick();
         
-        //update the status
-        document.getElementById('status')?.removeChild(document.getElementById('status').firstElementChild);
+        if(document.getElementById('status') != null){
+            //update the status
+            document.getElementById('status').removeChild(document.getElementById('status').firstElementChild);
+        }
+
+        //called to display the proper next and/or prev buttons based on results
+        DisplayCorrectPaginationButtons();  
     }
 
+    //function to notify error of data collection
     function dataError(e){
-        console.log("An error occurred");
+        console.log("An error occurred with data collection");
     }
 
+    //function to handle what happens with clicking on next page button 
     function nextPage() {
+        //if the currentPage value is less than the totalPages value
         if(currentPage < totalPages){
+            //add to currentPage by 1
             currentPage++;
+            //call method to search for more GIFs based on this currentPage
             SearchForMore();
         }  
     }
     
+    //function to handle what happens with clicking on next previous button 
     function prevPage() {
+        //if the currentPage value is greater than 1
         if (currentPage > 1) {
+            //subtract currentPage by 1
             currentPage--;
+            //call method to search for more GIFs based on this currentPage
             SearchForMore();
         }
     }
 
+    //function to handle getting data for other pages
     function SearchForMore() {
+        // display spinner
+        AddAndDisplaySpinner();
+        //call method to display the next and/or prev buttons
         DisplayCorrectPaginationButtons();
-        let updatedUrl = `${prevURL}&offset=${(currentPage - 1) * limit}`;
+        //create an update url with new offset based on currentPage
+        let updatedUrl = `${prevURL}&offset=${(currentPage-1) * limit}`;
+        //get the data of the new url
         getData(updatedUrl);
     }
 
+    //function that handles what to do for copy to clipboard logic when the button is clicked. 
     function CheckforCopyClick(){
-        for(let i=0; i<= limit; i++){
+        //increment through each button id
+        for(let i=0; i < limit; i++){
             //add event listener that when button is clicked copies small url to clipboard
             let button = document.getElementById(`copyToClipboard${i}`);
+            //if the button is null
             if(button == null){
+                //ignore it
                 continue;
             }
             else{
+                //set an onclick for this button
                 document.getElementById(`copyToClipboard${i}`).onclick = function() {
+                    //copy to clipboard
                     navigator.clipboard.writeText(copiedURLs[i]);
+                    //alert the browser
                     alert("Copied to Clipboard");
                 }
             }
         }
     }
 
+    //function that adds the term of a search to a recent search and ignore duplicates. term is input
     function CreateRecentSearch(term){
+        //loop through all current array recent searches
         for(let i = 0; i < arrayRecSearches.length; i++){
+            //if there is already a recent search that has the same value as one input
             if(arrayRecSearches[i] == term){
+                //ignored and not added to array
                 return;
             }
         }
@@ -223,6 +252,7 @@
         arrayRecSearches.push(recTerm.value);
     }
 
+    //function that creates the spinner and appends it to #status 
     function AddAndDisplaySpinner(){
         //create a const for the spinner and add the src and alt text
         const spinner = document.createElement('img');
@@ -239,14 +269,22 @@
         };
     }
 
+    //function that handles logic of which prev / next button will or won't be shown
     function DisplayCorrectPaginationButtons(){
+        //when the currentPage value is 1
         if(currentPage === 1){
+            //hide previous button
             document.querySelector("#prevButton").style.display = 'none';
+            document.querySelector("#nextButton").style.display = 'block';
         }
+        //when currentPage value is totalPages
         else if(currentPage === totalPages){
+            //hide next button
             document.querySelector('#nextButton').style.display = 'none';
+            document.querySelector("#prevButton").style.display = 'block';
         }
         else{
+            //show them both
             document.querySelector("#nextButton").style.display = 'block';
             document.querySelector("#prevButton").style.display = 'block';
         }
