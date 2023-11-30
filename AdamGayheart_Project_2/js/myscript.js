@@ -31,9 +31,6 @@
 	function searchButtonClicked(){
         // Update the UI
         AddAndDisplaySpinner();
-        
-        console.log(currentPage);
-		console.log("searchButtonClicked() called");
 
         DisplayCorrectPaginationButtons();
 
@@ -75,16 +72,12 @@
 
         url += `&offset=${(currentPage - 1) * limit}`;
 
-        //see what the url looks like
-        console.log(url);
-
         //request data
         getData(url);
         
 	}
 
     function getData(url){
-        console.log("getData called");
         //create xhr object
         let xhr = new XMLHttpRequest();
         //set the onload handler
@@ -107,8 +100,6 @@
 
         //event.target is the xhr object
         let xhr = e.target;
-        //xhjr.responseText is the JSON file we just downloaded
-        console.log(xhr.responseText);
 
         //turn the text into a parsable JavaScript object
         let obj = JSON.parse(xhr.responseText);
@@ -124,7 +115,6 @@
 
         //set the num of total pages
         totalPages = obj.data.length / limit;
-        console.log(totalPages);
 
         //set the start index and end index for the results of the page
         let startIndex = (currentPage - 1) * limit;
@@ -145,21 +135,15 @@
         for (let i=0; i<=limit; i++){
             let result = pagResults[i];
 
-            if(result != null){
-
-                // console.log(result);
-                // console.log(result.images);
-                
+            if(result != null){   
                 //get the URL to the GIF
                 let smallURL = result.images.fixed_width_downsampled.url;
-                console.log(smallURL);
 
                 //set the image not found png id not found
                 if(!smallURL) smallURL = "images/no-image-found.png";
 
                 //push the copied url to the array of copies
                 copiedURLs.push(smallURL);
-                console.log(copiedURLs);
 
                 //set the rating
                 let rating = result.rating.toUpperCase();
@@ -176,10 +160,11 @@
 
         }
 
+        //check for copy to clipboard button clicks
         CheckforCopyClick();
         
         //update the status
-        document.getElementById('status').removeChild(document.getElementById('status').firstElementChild);
+        document.getElementById('status')?.removeChild(document.getElementById('status').firstElementChild);
     }
 
     function dataError(e){
@@ -188,14 +173,12 @@
 
     function nextPage() {
         if(currentPage < totalPages){
-            console.log("Next Page called");
             currentPage++;
             SearchForMore();
         }  
     }
     
     function prevPage() {
-        console.log("Prev Page called");
         if (currentPage > 1) {
             currentPage--;
             SearchForMore();
@@ -205,7 +188,6 @@
     function SearchForMore() {
         DisplayCorrectPaginationButtons();
         let updatedUrl = `${prevURL}&offset=${(currentPage - 1) * limit}`;
-        console.log(updatedUrl);
         getData(updatedUrl);
     }
 
@@ -246,7 +228,6 @@
         const spinner = document.createElement('img');
         spinner.id = "#spinner";
         spinner.src = "images/spinner.gif";
-        console.log(spinner.src);
         spinner.alt = "Searching...";
 
         //append the spinner to the status

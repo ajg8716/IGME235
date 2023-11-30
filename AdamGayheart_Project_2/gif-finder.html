@@ -13,23 +13,23 @@
 	<img src="images/frutigerBanner.webp" alt="">
 </header>
 
-<div id="searchWrapper">
-	<div class="widgets">
+<article id="searchWrapper">
+	<section class="widgets">
 		<input id="searchterm" type="text" size="20" maxlength="20" autofocus value="" />
-	</div>
-	<div class="widgets">
+	</section>
+	<section class="widgets">
 		<button id="searchButton" type="button" class="default">Search</button>
-	</div>
-</div>
+	</section>
+</article>
 
-<div id="prevSearch">
+<section id="prevSearch">
 	<p>Previous Searches: </p>
 	<select id="recentSearches">
 		<!-- filled in my js script -->
 	</select>
-</div>
+</section>
 
-<div id="maxResults">
+<section id="maxResults">
 	<p>Results per Page</p>
 	<select id="maxNum">
 		<option value="5">5</option>
@@ -38,21 +38,21 @@
 		<option value="35">35</option>
 		<option value="50">50</option>
 	</select>
-</div>
+</section>
 
-<div id="status"></div>
+<article id="status"></article>
 <hr>
 
-<div id="results" style="display: none">
+<article id="results" style="display: none">
 	<h2>Results</h2>
-	<div id="content">
-	</div>
-</div>
+	<section id="content">
+	</section>
+</article>
 
-<div id="pagination" style="display: none">
+<footer id="pagination" style="display: none">
 	<button id="prevButton"><</button>
 	<button id="nextButton">></button>
-</div>
+</footer>
 
 </body>
 </html>
