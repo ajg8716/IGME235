@@ -5,6 +5,9 @@
 	
     let arrayRecSearches = [];
 
+    //array of small urls
+    let arrayCopies = [];
+
 	// 2
 	let displayTerm = "";
 
@@ -21,6 +24,8 @@
 
     //array of created buttons
     let createdButtons = [];
+
+    let copiedURLs = [];
 
 	// 3
 	function searchButtonClicked(){
@@ -129,16 +134,32 @@
  
         let bigString = "";
 
+        //clear the innerHTML
+        document.querySelector("#content").innerHTML = ""; 
+
+
+        //clear the array
+        copiedURLs = [];
+
         //loop through the array of results
-        for (let i=0; i<limit; i++){
+        for (let i=0; i<=limit; i++){
             let result = pagResults[i];
 
             if(result != null){
+
+                // console.log(result);
+                // console.log(result.images);
+                
                 //get the URL to the GIF
                 let smallURL = result.images.fixed_width_downsampled.url;
+                console.log(smallURL);
 
                 //set the image not found png id not found
                 if(!smallURL) smallURL = "images/no-image-found.png";
+
+                //push the copied url to the array of copies
+                copiedURLs.push(smallURL);
+                console.log(copiedURLs);
 
                 //set the rating
                 let rating = result.rating.toUpperCase();
@@ -151,18 +172,12 @@
                 //add the <div> to the 'bigString' and loop
                 document.querySelector("#content").innerHTML += line;
 
-                console.log(document.getElementById(`copyToClipboard${i}`));
-                document.getElementById(`copyToClipboard${i}`).style.outline = '2px solid red';
-                document.getElementById(`copyToClipboard${i}`).addEventListener('click',() => {
-                    navigator.clipboard.writeText(smallURl);
-                    alert("Copied to Clipboard");
-                })
             }
 
         }
 
-
-
+        CheckforCopyClick();
+        
         //update the status
         document.getElementById('status').removeChild(document.getElementById('status').firstElementChild);
     }
@@ -194,32 +209,21 @@
         getData(updatedUrl);
     }
 
-    // function createPaginationButtons(totalPages) {
-    //     const pagination = document.getElementById('pagination');
-      
-    //     // Clear existing buttons except the navigation buttons
-    //     while (pagination.firstChild !== null && pagination.childNodes.length > 2) {
-    //       if (!createdButtons.includes(pagination.firstChild)) {
-    //         pagination.removeChild(pagination.firstChild);
-    //       } else {
-    //         break; // Stop removing nodes if it encounters a created button
-    //       }
-    //     }
-      
-    //     // Create buttons for new pages
-    //     for (let i = createdButtons.length + 1; i <= totalPages; i++) {
-    //       const button = document.createElement('button');
-    //       button.textContent = i;
-    //       button.addEventListener('click', () => {
-    //         currentPage = i;
-    //         SearchForMore();
-    //       });
-    //       pagination.insertBefore(button, document.getElementById('nextButton'));
-    //       createdButtons.push(button);
-    //     }
-    // }
-
-
+    function CheckforCopyClick(){
+        for(let i=0; i<= limit; i++){
+            //add event listener that when button is clicked copies small url to clipboard
+            let button = document.getElementById(`copyToClipboard${i}`);
+            if(button == null){
+                continue;
+            }
+            else{
+                document.getElementById(`copyToClipboard${i}`).onclick = function() {
+                    navigator.clipboard.writeText(copiedURLs[i]);
+                    alert("Copied to Clipboard");
+                }
+            }
+        }
+    }
 
     function CreateRecentSearch(term){
         for(let i = 0; i < arrayRecSearches.length; i++){
