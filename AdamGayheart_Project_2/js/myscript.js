@@ -146,19 +146,25 @@
                 //build a <div> to hold each result
                 //ES6 string templating replacing view on Giphy with button to copy to Clipboard
                 let line = `<div class='result'><img src='${smallURL}' title='${result.id}'/>`;
-                line += `<span><button class='copyToClipboard'>Copy to Clipboard</button><p class = 'rating'>Rating: ${rating}</p></span></div>`;
+                line += `<span><button id='copyToClipboard${i}' class='copyToClipboard'>Copy to Clipboard</button><p class = 'rating'>Rating: ${rating}</p></span></div>`;
 
                 //add the <div> to the 'bigString' and loop
-                bigString += line;
+                document.querySelector("#content").innerHTML += line;
+
+                console.log(document.getElementById(`copyToClipboard${i}`));
+                document.getElementById(`copyToClipboard${i}`).style.outline = '2px solid red';
+                document.getElementById(`copyToClipboard${i}`).addEventListener('click',() => {
+                    navigator.clipboard.writeText(smallURl);
+                    alert("Copied to Clipboard");
+                })
             }
 
         }
 
-        //all donw building the HTML - show it to the user
-        document.querySelector("#content").innerHTML = bigString;
+
 
         //update the status
-        document.getElementById('status').removeChild(document.getElementById('status').firstChild);
+        document.getElementById('status').removeChild(document.getElementById('status').firstElementChild);
     }
 
     function dataError(e){
@@ -212,6 +218,8 @@
     //       createdButtons.push(button);
     //     }
     // }
+
+
 
     function CreateRecentSearch(term){
         for(let i = 0; i < arrayRecSearches.length; i++){
