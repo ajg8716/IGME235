@@ -22,27 +22,29 @@ let gameScene,scoreLabel,lifeLabel,shootSound,hitSound,fireballSound;
 let gameOverScene;
 
 let buoys = [];
-let bullets = [];
-let aliens = [];
-let explosions = [];
-let explosionTextures;
+let swimmersDanger = [];
+let swimmersSaved = [];
 let score = 0;
 let life = 100;
 let levelNum = 1;
 let paused = true;
 
+let colliding = false;
+
+let keys = {};
+
 //pre-load the images (this code works with PIXI v6)
-// app.loader.
-//     add([
-//         'images/Buoy.png',
-//         'images/LifeGuard.png',
-//         'images/Swimmer1.png',
-//         'images/Swimmer1saved.png',
-//         'images/Swimmer2.png',
-//         'images/Swimmer2saved.png'
-//     ]);
+app.loader.
+    add([
+        'images/Buoy.png',
+        'images/LifeGuard.png',
+        'images/Swimmer1.png',
+        'images/Swimmer1saved.png',
+        'images/Swimmer2.png',
+        'images/Swimmer2saved.png'
+    ]);
 app.loader.onProgress.add(e => { console.log(`progress=${e.progress}`) });
-app.loader.onComplete.add(setup());
+app.loader.onComplete.add(setup);
 app.loader.load();
 
 // // //pre-load the images (this code works with PIXI v7)
@@ -82,7 +84,7 @@ function setup() {
     createLabelsAndButtons();
 	
 	// #5 - Create LifeGuard
-    lifeGuard = new LifeGuard(10);
+    lifeGuard = new LifeGuard();
     gameScene.addChild(lifeGuard)
 	
 	// #6 - Load Sounds
@@ -199,6 +201,13 @@ function startGame(){
     startScene.visible = false;
     gameOverScene.visible = false;
     gameScene.visible = true;
+    score = 0;
+    life = 100;
+    increaseScoreBy(0);
+    decreaseLifeBy(0);
+    lifeGuard.x = 600;
+    lifeGuard.y = 750;
+    loadLevel();
 }
 
 function increaseScoreBy(value){
@@ -222,29 +231,100 @@ function createBuoys(numBuoys){
     }
 }
 
+function loadLevel(){
+    createBuoys(1);
+    paused = false;
+}
+
+function moveLifeGuard(){
+    //move right if hitting d key
+    if(keys["68"]){
+        lifeGuard.x += lifeGuard.speed;
+        lifeGuard.rotation = Math.PI / 10;
+    }
+    //move left if hitting a key
+    if(keys["65"]){
+        lifeGuard.x -= lifeGuard.speed;
+        lifeGuard.rotation = -Math.PI/ 10;
+    }
+    if(keys["65"] && keys["68"]){
+        lifeGuard.rotation = 0;
+    }
+    else if(!keys["68"] && !keys["65"]){
+        lifeGuard.rotation = 0;
+    }
+
+    lifeGuard.boundingBox.x = lifeGuard.x;
+    lifeGuard.boundingBox.y = lifeGuard.y - lifeGuard.boundingBox.height;
+}
+
+function keysDown(e){
+    keys[e.keyCode] = true;
+}
+
+function keysUp(e){
+    keys[e.keyCode] = false;
+}
+
+function end(){
+    buoys.forEach(c => gameScene.removeChild(c));
+    buoys = [];
+
+    gameOverScene.visible = true;
+    gameScene.visible = false;
+}
+
 function gameLoop(){
-    // if (paused) return; // keep this commented out for now
+    if (paused) return; 
 	
 	// #1 - Calculate "delta time"
 	let dt = 1/app.ticker.FPS;
     if(dt > 1/12) dt=1/12;
 	
 	// #2 - Move jet ski
-	
+    window.addEventListener("keydown", keysDown);
+    window.addEventListener("keyup", keysUp);
+    moveLifeGuard();
+    let w2 = lifeGuard.width/2;
+    let h2 = lifeGuard.height/2;
+    lifeGuard.x = clamp(lifeGuard.x, 0+w2, sceneWidth-w2);
+    lifeGuard.y = clamp(lifeGuard.y, 0+h2, sceneHeight-h2);
 	
 	// #3 - Move buoys
-	
+    for(let c of buoys){
+        let hb = c.height/2;
+        c.move(dt);
+        if(c.y >= sceneHeight+hb){
+            c.y = 0-hb;
+            c.x = getRandom(0, sceneWidth);
+        }
+    }
+
 	// #4 - Move swimmers
 
 	
 	// #5 - Check for Collisions
-	
+	for(let c of buoys){
+        if(rectsIntersect(c.boundingBox,lifeGuard.boundingBox)){
+            if(!colliding){
+                //hit sound.play();
+            decreaseLifeBy(20);
+            colliding = true;
+            }
+        }
+        else{
+            colliding = false;
+        }
+    }
 	
 	// #6 - Now do some clean up
 	
 	
 	// #7 - Is game over?
-	
+	if (life <= 0){
+        end();
+        return;
+    }
 	
 	// #8 - Load next level
 }

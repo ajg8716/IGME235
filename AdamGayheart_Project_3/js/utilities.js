@@ -18,9 +18,7 @@
     
     // bounding box collision detection - it compares PIXI.Rectangles
 	function rectsIntersect(a,b){
-		var ab = a.getBounds();
-		var bb = b.getBounds();
-		return ab.x + ab.width > bb.x && ab.x < bb.x + bb.width && ab.y + ab.height > bb.y && ab.y < bb.y + bb.height;
+		return a.x + a.width > b.x && a.x < b.x + b.width && a.y + a.height > b.y && a.y < b.y + b.height;
 	}
 	
 	// these 2 helpers are used by classes.js
@@ -38,6 +36,10 @@
 		}
 	
 		return {x:x, y:y};
+	}
+
+	function getUnitVector(){
+		return {x:0, y:-1};
 	}
 
 	function getRandom(min, max) {
