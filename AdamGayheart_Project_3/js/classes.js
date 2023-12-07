@@ -1,6 +1,8 @@
-class LifeGuard extends PIXI.Sprite {
-    constructor(x = 0, y = 0) {
-        super(app.loader.resources["images/LifeGuard.png"].texture);
+class LifeGuard extends PIXI.Graphics{
+    constructor(radius, x = 0, y = 0) {
+        // super(app.loader.resources["images/LifeGuard.png"].texture);
+        this.radius = radius;
+        this.drawCircle(0,0,radius)
         this.anchor.set(.5, .5);
         this.scale.set(0.1);
         this.x = x;
@@ -8,10 +10,11 @@ class LifeGuard extends PIXI.Sprite {
     }
 }
 
-class Buoy extends PIXI.Sprite {
+class Buoy extends PIXI.Graphics{
     constructor(radius, x=0, y=0){
-        super(app.loader.resources["images/Buoy.png"].texture);
+        // super(app.loader.resources["images/Buoy.png"].texture);
         this.radius = radius;
+        this.drawCircle(0,0,radius)
         this.anchor.set(.5, .5);
         this.scale.set(0.1);
         this.x = x;

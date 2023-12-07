@@ -1,6 +1,7 @@
 // We will use `strict mode`, which helps us by having the browser catch many common JS mistakes
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
 "use strict";
+
 const app = new PIXI.Application({
     width: 1500,
     height: 1000
@@ -11,18 +12,37 @@ document.body.appendChild(app.view);
 const sceneWidth = app.view.width;
 const sceneHeight = app.view.height;	
 
+// aliases
+let stage;
+
+// game variables
+let startScene;
+let lifeGuard;
+let gameScene,scoreLabel,lifeLabel,shootSound,hitSound,fireballSound;
+let gameOverScene;
+
+let buoys = [];
+let bullets = [];
+let aliens = [];
+let explosions = [];
+let explosionTextures;
+let score = 0;
+let life = 100;
+let levelNum = 1;
+let paused = true;
+
 //pre-load the images (this code works with PIXI v6)
-app.loader.
-    add([
-        'images/Buoy.png',
-        'images/LifeGuard.png',
-        'images/Swimmer1.png',
-        'images/Swimmer1saved.png',
-        'images/Swimmer2.png',
-        'images/Swimmer2saved.png'
-    ]);
+// app.loader.
+//     add([
+//         'images/Buoy.png',
+//         'images/LifeGuard.png',
+//         'images/Swimmer1.png',
+//         'images/Swimmer1saved.png',
+//         'images/Swimmer2.png',
+//         'images/Swimmer2saved.png'
+//     ]);
 app.loader.onProgress.add(e => { console.log(`progress=${e.progress}`) });
-app.loader.onComplete.add(setup);
+app.loader.onComplete.add(setup());
 app.loader.load();
 
 // // //pre-load the images (this code works with PIXI v7)
@@ -41,24 +61,6 @@ app.loader.load();
 // // assets = await PIXI.Assets.loadBundle('sprites');
 // setup();
 // }
-
-// aliases
-let stage;
-
-// game variables
-let startScene;
-let gameScene,lifeGuard,scoreLabel,lifeLabel,shootSound,hitSound,fireballSound;
-let gameOverScene;
-
-let buoys = [];
-let bullets = [];
-let aliens = [];
-let explosions = [];
-let explosionTextures;
-let score = 0;
-let life = 100;
-let levelNum = 1;
-let paused = true;
 
 function setup() {
 	stage = app.stage;
@@ -80,7 +82,7 @@ function setup() {
     createLabelsAndButtons();
 	
 	// #5 - Create LifeGuard
-    lifeGuard = new LifeGuard();
+    lifeGuard = new LifeGuard(10);
     gameScene.addChild(lifeGuard)
 	
 	// #6 - Load Sounds
