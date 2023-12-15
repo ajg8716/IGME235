@@ -2,11 +2,26 @@
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
 "use strict";
 
+const canvas = document.getElementById('mycanvas');
+
 const app = new PIXI.Application({
-    width: 1500,
-    height: 1000
+    view: canvas,
+    width: 1300,
+    height: 1000,
+    resolution: window.devicePixelRatio,
+    autoDensity: true,
 });
 document.body.appendChild(app.view);
+
+
+window.addEventListener('resize', resize );
+
+function resize(){
+    let screenWidth = window.innerWidth;
+    let screenHeight = window.innerHeight;
+
+    renderer.resize(screenWidth, screenHeight);
+}
 
 // constants
 const sceneWidth = app.view.width;
@@ -22,6 +37,8 @@ let gameScene,scoreLabel,lifeLabel,shootSound,hitSound,fireballSound;
 let gameOverScene;
 
 let buoys = [];
+let swimmers = [];
+let waves = [];
 let swimmersDanger = [];
 let swimmersSaved = [];
 let score = 0;
@@ -41,28 +58,12 @@ app.loader.
         'images/Swimmer1.png',
         'images/Swimmer1saved.png',
         'images/Swimmer2.png',
-        'images/Swimmer2saved.png'
+        'images/Swimmer2saved.png',
+        'images/waves.png'
     ]);
 app.loader.onProgress.add(e => { console.log(`progress=${e.progress}`) });
 app.loader.onComplete.add(setup);
 app.loader.load();
-
-// // //pre-load the images (this code works with PIXI v7)
-// let assets;
-// loadImages();
-// async function loadImages(){
-// PIXI.Assets.addBundle('sprites', {
-//   lifeguard: 'images/LifeGuard.png',
-//   buoy: 'images/Buoy.png',
-//   swimmer1danger: 'images/Swimmer1.png',
-//   swimmer1saved: 'images/Swimmer1saved.png',
-//   swimmer2danger: 'images/Swimmer2.png',
-//   swimmer2saved: 'images/Swimmer2saved.png'
-// });
-
-// // assets = await PIXI.Assets.loadBundle('sprites');
-// setup();
-// }
 
 function setup() {
 	stage = app.stage;
@@ -221,18 +222,62 @@ function decreaseLifeBy(value){
     lifeLabel.text = `Life: ${life}%`;
 }
 
+function SaveSwimmer(swimmer){
+    //if swimmer is a Swimmer1 class
+    if(swimmer instanceof Swimmer1){
+    //change swimmer texture to swimmer1.texture2
+    swimmer.texture = app.loader.resources["images/Swimmer1saved.png"].texture;
+    }
+    //else if swimmer is Swimmer2 class
+    else if(swimmer instanceof Swimmer2){
+    //change swimmer texture to swimmer2.texture2   
+    swimmer.texture = app.loader.resources["images/Swimmer2saved.png"].texture;
+    }
+}
+
 function createBuoys(numBuoys){
     for(let i=0; i<numBuoys; i++){
         let c = new Buoy(10);
         c.x = Math.random() * (sceneWidth - 50) + 25;
-        c.y = Math.random() * (sceneHeight - 800) + 25;
+        c.y = 0 + 50;
         buoys.push(c);
         gameScene.addChild(c);
     }
 }
 
+function createSwimmers(numSwimmers){
+    for(let i=0; i < numSwimmers; i++){
+        //random float between 0 and 1
+        let randomNumber = Math.random();
+        let c;
+
+        //random to determine if male swimmer or female swimmer
+        if(randomNumber < 0.5){
+            c = new Swimmer1();
+        }
+        else if(randomNumber >= .5){
+            c = new Swimmer2();
+        }
+
+        c.x = Math.random() * (sceneWidth - 50) + 25;
+        c.y = 0 + 50;
+        swimmers.push(c);
+        gameScene.addChild(c);
+    }
+}
+
+function createWaves(yPos){
+    let w = new Waves();
+    w.x = 0;
+    w.y = yPos;
+    waves.push(w); 
+    gameScene.addChild(w);
+}
+
 function loadLevel(){
     createBuoys(1);
+    createSwimmers(1);
+    createWaves(0);
     paused = false;
 }
 
@@ -270,14 +315,17 @@ function end(){
     buoys.forEach(c => gameScene.removeChild(c));
     buoys = [];
 
+    swimmers.forEach(c => gameScene.removeChild(c));
+    swimmers = [];
+
     gameOverScene.visible = true;
     gameScene.visible = false;
 }
 
 function gameLoop(){
     if (paused) return; 
-	
-	// #1 - Calculate "delta time"
+
+    // #1 - Calculate "delta time"
 	let dt = 1/app.ticker.FPS;
     if(dt > 1/12) dt=1/12;
 	
@@ -290,35 +338,96 @@ function gameLoop(){
     lifeGuard.x = clamp(lifeGuard.x, 0+w2, sceneWidth-w2);
     lifeGuard.y = clamp(lifeGuard.y, 0+h2, sceneHeight-h2);
 	
+    //Create extra buoys
+    let random = Math.random();
+    if(random <= .0045){
+        createBuoys(1);
+    }
+    else if(random <= .0035){
+        createBuoys(2);
+    }
+    
 	// #3 - Move buoys
     for(let c of buoys){
         let hb = c.height/2;
         c.move(dt);
         if(c.y >= sceneHeight+hb){
-            c.y = 0-hb;
-            c.x = getRandom(0, sceneWidth);
+            c.isAlive = false;
+            gameScene.removeChild(c);
         }
     }
 
-	// #4 - Move swimmers
+    //random value to determine swimmer spawn
+    random = Math.random();
+    //create 1 swimmer if the random value is lower than .0025 for a .25% chance of spawn
+    if(random <= 0.0025){
+        createSwimmers(1);
+    }
+    //create 2 swimmers if the random value is lower than .0015 for a .15% chance of spawn
+    else if(random <= .0015){
+        createSwimmers(2);
+    }
 
+
+	// #4 - Move swimmers
+    for(let s of swimmers){
+        let hb = s.height/2;
+        s.move(dt);
+        if(s.y >= sceneHeight+hb){
+            gameScene.removeChild(s);
+            s.isAlive = false;
+        }
+    }
 	
 	// #5 - Check for Collisions
 	for(let c of buoys){
-        if(rectsIntersect(c.boundingBox,lifeGuard.boundingBox)){
-            if(!colliding){
+        if(rectsIntersect(c.boundingBox, lifeGuard.boundingBox)){
+            if(!c.colliding){
                 //hit sound.play();
             decreaseLifeBy(20);
-            colliding = true;
+            c.colliding = true;
             }
         }
         else{
-            colliding = false;
+            c.colliding = false;
+        }
+    }
+
+    for(let s of swimmers){
+        if(rectsIntersect(s.boundingBox, lifeGuard.boundingBox)){
+            if(!s.colliding){
+                increaseScoreBy(25);
+                SaveSwimmer(s);
+                s.colliding = true;
+            }
+        }
+        else{
+            s.colliding = false;
+        }
+    }
+
+    //create new waves to move down
+    for(let w of waves){
+        w.move(dt);
+        if(w.y == 0){
+            createWaves(-w.height);
+            gameScene.setChildIndex(w, -1);
+        }
+        if(w.y >= sceneHeight){
+            gameScene.removeChild(w);
+            w.isAlive = false;
+        }
+        else{
+            return;
         }
     }
 	
 	// #6 - Now do some clean up
-	
+	swimmers = swimmers.filter(s => s.isAlive);
+
+    buoys = buoys.filter(b => b.isAlive);
+
+    waves = waves.filter(w => w.isAlive);
 	
 	// #7 - Is game over?
 	if (life <= 0){
