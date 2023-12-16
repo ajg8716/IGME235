@@ -1,18 +1,16 @@
-class Waves extends PIXI.Sprite{
-    constructor(x = 0, y = 0){
-        super(app.loader.resources["images/waves.png"].texture);
-        this.anchor.set(.5, .5);
-        this.scale.set(1);
+class Waves extends PIXI.TilingSprite{
+    constructor(speed, width, height){
+        super(app.loader.resources["images/waves.png"].texture, width, height);
+        this.position.set(0,0);
         this.rotation = 0;
-        this.x = x;
-        this.y = y;
+        this.speed = speed;
         this.fwd = getUnitVector();
-        this.speed = 200;
+        stage.addChild(this);
     }
 
     move(dt=1/60){
-        //move the buoy
-        this.y -= this.fwd.y * this.speed * dt;
+        //move the waves
+        this.tilePosition.y -= this.fwd.y * this.speed * dt;
     }
 }
 
@@ -26,32 +24,35 @@ class LifeGuard extends PIXI.Sprite{
         this.y = y;
         this.speed = 10;
         
-        this.boundingBox = new PIXI.Rectangle(-20, -150, 114, 290);
+        this.boundingBox = new PIXI.Rectangle(this.x-15, this.y-120, 110, 260);
 
-        let box = new PIXI.Graphics();
-        box.lineStyle(1, 0xFF0000);
-        box.drawRect(this.boundingBox.x, this.boundingBox.y, this.boundingBox.width, this.boundingBox.height)
-        this.addChild(box);
+        //DRAWING COLLISION BOXES
+        // let box = new PIXI.Graphics();
+        // box.lineStyle(1, 0xFF0000);
+        // box.drawRect(this.boundingBox.x, this.boundingBox.y, this.boundingBox.width, this.boundingBox.height)
+        // this.addChild(box);
     }
 }
 
 class Buoy extends PIXI.Sprite{
-    constructor(x=0, y=0){
+    constructor(speed, x=0, y=0){
         super(app.loader.resources["images/Buoy.png"].texture);
         this.anchor.set(.5, .5);
         this.scale.set(1);
         this.x = x;
         this.y = y;
         this.fwd = getUnitVector();
-        this.speed = 200;
+        this.speed = speed;
         this.isAlive = true;
+        this.isSaved = false;
 
-        this.boundingBox = new PIXI.Rectangle(-53, +30, 115, 110);
+        this.boundingBox = new PIXI.Rectangle(this.x-50, this.y+30, 110, 110);
 
-        let box = new PIXI.Graphics();
-        box.lineStyle(1, 0xFF0000);
-        box.drawRect(this.boundingBox.x, this.boundingBox.y, this.boundingBox.width, this.boundingBox.height)
-        this.addChild(box);
+        //DRAWING COLLISION BOXES
+        // let box = new PIXI.Graphics();
+        // box.lineStyle(1, 0xFF0000);
+        // box.drawRect(this.boundingBox.x, this.boundingBox.y, this.boundingBox.width, this.boundingBox.height)
+        // this.addChild(box);
     }
 
     move(dt=1/60){
@@ -65,22 +66,24 @@ class Buoy extends PIXI.Sprite{
 }
 
 class Swimmer1 extends PIXI.Sprite{
-    constructor(x=0, y=0){
+    constructor(speed, x=0, y=0){
         super(app.loader.resources["images/Swimmer1.png"].texture);
         this.anchor.set(.5, .5);
         this.scale.set(1);
         this.x = x;
         this.y = y;
         this.fwd = getUnitVector();
-        this.speed = 200;
+        this.speed = speed;
         this.isAlive = true;
+        this.isSaved = false;
 
         this.boundingBox = new PIXI.Rectangle(-150, -150, 300, 300);
 
-        let box = new PIXI.Graphics();
-        box.lineStyle(1, 0xFF0000);
-        box.drawRect(this.boundingBox.x, this.boundingBox.y, this.boundingBox.width, this.boundingBox.height);
-        this.addChild(box);
+        //DRAWING COLLISION BOXES
+        // let box = new PIXI.Graphics();
+        // box.lineStyle(1, 0xFF0000);
+        // box.drawRect(this.boundingBox.x, this.boundingBox.y, this.boundingBox.width, this.boundingBox.height);
+        // this.addChild(box);
     }
 
     move(dt=1/60){
@@ -98,22 +101,23 @@ class Swimmer1 extends PIXI.Sprite{
 }
 
 class Swimmer2 extends PIXI.Sprite{
-    constructor(x=0, y=0){
+    constructor(speed, x=0, y=0){
         super(app.loader.resources["images/Swimmer2.png"].texture);
         this.anchor.set(.5, .5);
         this.scale.set(1);
         this.x = x;
         this.y = y;
         this.fwd = getUnitVector();
-        this.speed = 200;
+        this.speed = speed;
         this.isAlive = true;
 
         this.boundingBox = new PIXI.Rectangle(-150, -150, 300, 300);
 
-        let box = new PIXI.Graphics();
-        box.lineStyle(1, 0xFF0000);
-        box.drawRect(this.boundingBox.x, this.boundingBox.y, this.boundingBox.width, this.boundingBox.height);
-        this.addChild(box);
+        //DRAWING COLLISION BOXES
+        // let box = new PIXI.Graphics();
+        // box.lineStyle(1, 0xFF0000);
+        // box.drawRect(this.boundingBox.x, this.boundingBox.y, this.boundingBox.width, this.boundingBox.height);
+        // this.addChild(box);
     }
 
     move(dt=1/60){

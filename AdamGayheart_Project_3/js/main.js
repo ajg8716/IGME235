@@ -6,8 +6,8 @@ const canvas = document.getElementById('mycanvas');
 
 const app = new PIXI.Application({
     view: canvas,
-    width: 1300,
-    height: 1000,
+    width: 1000,
+    height: 1100,
     resolution: window.devicePixelRatio,
     autoDensity: true,
 });
@@ -20,8 +20,10 @@ function resize(){
     let screenWidth = window.innerWidth;
     let screenHeight = window.innerHeight;
 
-    renderer.resize(screenWidth, screenHeight);
+    app.resize(screenWidth, screenHeight);
 }
+
+resize();
 
 // constants
 const sceneWidth = app.view.width;
@@ -38,13 +40,16 @@ let gameOverScene;
 
 let buoys = [];
 let swimmers = [];
-let waves = [];
 let swimmersDanger = [];
 let swimmersSaved = [];
+let speed = 0;
+let increasingSpeed = false;
 let score = 0;
 let life = 100;
 let levelNum = 1;
 let paused = true;
+
+let background;
 
 let colliding = false;
 
@@ -83,14 +88,12 @@ function setup() {
 	
 	// #4 - Create labels for all 3 scenes
     createLabelsAndButtons();
-	
+
 	// #5 - Create LifeGuard
     lifeGuard = new LifeGuard();
-    gameScene.addChild(lifeGuard)
-	
+    gameScene.addChildAt(lifeGuard, 2);
+
 	// #6 - Load Sounds
-	
-	// #7 - Load sprite sheet
 		
 	// #8 - Start update loop
 	app.ticker.add(gameLoop);
@@ -204,10 +207,11 @@ function startGame(){
     gameScene.visible = true;
     score = 0;
     life = 100;
+    speed = 200;
     increaseScoreBy(0);
     decreaseLifeBy(0);
     lifeGuard.x = 600;
-    lifeGuard.y = 750;
+    lifeGuard.y = 900;
     loadLevel();
 }
 
@@ -237,11 +241,11 @@ function SaveSwimmer(swimmer){
 
 function createBuoys(numBuoys){
     for(let i=0; i<numBuoys; i++){
-        let c = new Buoy(10);
+        let c = new Buoy(speed);
         c.x = Math.random() * (sceneWidth - 50) + 25;
         c.y = 0 + 50;
         buoys.push(c);
-        gameScene.addChild(c);
+        gameScene.addChildAt(c, 1);
     }
 }
 
@@ -253,31 +257,29 @@ function createSwimmers(numSwimmers){
 
         //random to determine if male swimmer or female swimmer
         if(randomNumber < 0.5){
-            c = new Swimmer1();
+            c = new Swimmer1(speed);
         }
         else if(randomNumber >= .5){
-            c = new Swimmer2();
+            c = new Swimmer2(speed);
         }
 
         c.x = Math.random() * (sceneWidth - 50) + 25;
         c.y = 0 + 50;
         swimmers.push(c);
-        gameScene.addChild(c);
+        gameScene.addChildAt(c, 1);
     }
 }
 
-function createWaves(yPos){
-    let w = new Waves();
-    w.x = 0;
-    w.y = yPos;
-    waves.push(w); 
-    gameScene.addChild(w);
+function createWaves(){
+    //create background
+	background = new Waves(speed, sceneWidth, sceneHeight);
+    gameScene.addChildAt(background, 0);
 }
 
 function loadLevel(){
     createBuoys(1);
     createSwimmers(1);
-    createWaves(0);
+    createWaves(speed, sceneWidth, sceneHeight);
     paused = false;
 }
 
@@ -312,14 +314,32 @@ function keysUp(e){
 }
 
 function end(){
+    //clear lists of buoys and swimmers
     buoys.forEach(c => gameScene.removeChild(c));
     buoys = [];
 
     swimmers.forEach(c => gameScene.removeChild(c));
     swimmers = [];
 
+    //remove waves background
+    gameScene.removeChild(background);
+
+    //set speed to 0
+    speed = 0;
+
     gameOverScene.visible = true;
     gameScene.visible = false;
+}
+
+function Colliding(a, b){
+    if(a.boundingBox.x < b.boundingBox.x + b.boundingBox.width &&
+        a.boundingBox.x + a.boundingBox.width > b.boundingBox.x &&
+        a.boundingBox.y < b.boundingBox.y + b.boundingBox.height &&
+        a.boundingBox.y + a.boundingBox.height > b.boundingBox.y){
+        
+        return true;
+    }
+    return false;
 }
 
 function gameLoop(){
@@ -378,10 +398,13 @@ function gameLoop(){
             s.isAlive = false;
         }
     }
+
+    //move background
+    background.move();
 	
 	// #5 - Check for Collisions
 	for(let c of buoys){
-        if(rectsIntersect(c.boundingBox, lifeGuard.boundingBox)){
+        if(Colliding(c, lifeGuard)){
             if(!c.colliding){
                 //hit sound.play();
             decreaseLifeBy(20);
@@ -393,41 +416,51 @@ function gameLoop(){
         }
     }
 
+    //colliding with swimmers
     for(let s of swimmers){
-        if(rectsIntersect(s.boundingBox, lifeGuard.boundingBox)){
-            if(!s.colliding){
+        if(Colliding(s, lifeGuard)){
+            if(!s.colliding && !s.isSaved){
                 increaseScoreBy(25);
                 SaveSwimmer(s);
                 s.colliding = true;
+                s.isSaved = true;
             }
         }
         else{
             s.colliding = false;
         }
     }
-
-    //create new waves to move down
-    for(let w of waves){
-        w.move(dt);
-        if(w.y == 0){
-            createWaves(-w.height);
-            gameScene.setChildIndex(w, -1);
-        }
-        if(w.y >= sceneHeight){
-            gameScene.removeChild(w);
-            w.isAlive = false;
-        }
-        else{
-            return;
-        }
-    }
 	
+	//increase speed when score is divisible by 100
+    if(score % 100 == 0){
+        if(!increasingSpeed){
+            //increase the speed variable for newly created objects
+            speed += 50;
+            console.log(speed);
+            //increase speed of already created buoys
+            for(let b of buoys){
+                b.speed = speed;
+            }
+            //increase speed of already created swimmers
+            for(let s of swimmers){
+                s.speed = speed;
+            }
+            //increase speed of lifeGuard
+            lifeGuard.speed += 1;
+            //increase speed of background
+            background.speed = speed;
+            //set increasing speed to true
+            increasingSpeed = true;
+        }   
+    }
+    else{
+        increasingSpeed = false;
+    }
+
 	// #6 - Now do some clean up
 	swimmers = swimmers.filter(s => s.isAlive);
 
     buoys = buoys.filter(b => b.isAlive);
-
-    waves = waves.filter(w => w.isAlive);
 	
 	// #7 - Is game over?
 	if (life <= 0){
@@ -435,5 +468,4 @@ function gameLoop(){
         return;
     }
 	
-	// #8 - Load next level
 }
