@@ -35,8 +35,16 @@ let stage;
 // game variables
 let startScene;
 let lifeGuard;
-let gameScene,scoreLabel,lifeLabel,shootSound,hitSound,fireballSound;
+let gameScene,scoreLabel,lifeLabel;
 let gameOverScene;
+
+//sounds
+let swimmer1Help;
+let swimmer2Help;
+let saved;
+let hitBuoy;
+let jetski;
+let drown;
 
 let buoys = [];
 let swimmers = [];
@@ -48,6 +56,10 @@ let score = 0;
 let life = 100;
 let levelNum = 1;
 let paused = true;
+
+//trackers for saved and drowned swimmers
+let savedSwimmers;
+let drownedSwimmers;
 
 let background;
 
@@ -91,10 +103,35 @@ function setup() {
 
 	// #5 - Create LifeGuard
     lifeGuard = new LifeGuard();
-    gameScene.addChildAt(lifeGuard, 2);
+    gameScene.addChildAt(lifeGuard, 1);
 
 	// #6 - Load Sounds
-		
+    swimmer1Help = new Howl({
+        src: ['sounds/swimmer1Help.mp3']
+    });
+
+    swimmer2Help = new Howl({
+        src: ['sounds/swimmer2Help.mp3'],
+        volume: 0.7,
+    });
+	
+    saved = new Howl({
+        src: ['sounds/saved.mp3'],
+        volume: 0.7,
+    });
+
+    hitBuoy = new Howl({
+        src: ['sounds/BellBuoy.mp3']
+    });
+
+    jetski = new Howl({
+        src: ['sounds/jetski.mp3'],
+        loop: true,
+    });
+
+    drown = new Howl({
+        src: ['sounds/drown.mp3']
+    })
 	// #8 - Start update loop
 	app.ticker.add(gameLoop);
 	// #9 - Start listening for click events on the canvas
@@ -124,24 +161,25 @@ function createLabelsAndButtons(){
     startScene.addChild(startLabel1);
 
     //create start label and style it
-    let startLabel2 = new PIXI.Text("Can You Save the Swimmers?");
+    let startLabel2 = new PIXI.Text("Use your 'a' and 'd' keys to manuever Hurricane Bay as the\nbest lifeguard, Kyle Wavecrest, through treterous buoys\nto save stranded swimmers.\n\nYou'll need to get your jetski close enough so that Kyle\ncan throw the swimmers a life preserver");
     startLabel2.style = new PIXI.TextStyle({
         fill: 0xFFFFFF,
+        align: 'center',
         fontSize: 32,
         fontFamily: "Futura",
         fontStyle: "italic",
         stroke: 0xFF0000,
         strokeThickness: 6
     });
-    startLabel2.x = 185;
+    startLabel2.x = 160;
     startLabel2.y = 300;
     startScene.addChild(startLabel2);
 
     //create the start button and add style to it
     let startButton = new PIXI.Text("Start");
     startButton.style = buttonStyle;
-    startButton.x = 80;
-    startButton.y = sceneHeight - 100;
+    startButton.x = sceneWidth / 2;
+    startButton.y = sceneHeight - 400;
     startButton.interactive = true;
     startButton.buttonMode = true;
     startButton.on("pointerup", startGame);
@@ -175,7 +213,7 @@ function createLabelsAndButtons(){
     decreaseLifeBy(0);
 
     // 3A - make game over text
-    let gameOverText = new PIXI.Text("Game Over!");
+    let gameOverText = new PIXI.Text("You Crashed the Jet Ski!");
     textStyle = new PIXI.TextStyle({
         fill: 0xFFFFFF,
         fontSize: 64,
@@ -195,17 +233,35 @@ function createLabelsAndButtons(){
     playAgainButton.y = sceneHeight - 100;
     playAgainButton.interactive = true;
     playAgainButton.buttonMode = true;
-    playAgainButton.on("pointerup",startGame); // startGame is a function reference
+    playAgainButton.on("pointerup", startGame); // startGame is a function reference
     playAgainButton.on('pointerover',e=>e.target.alpha = 0.7); // concise arrow function with no brackets
     playAgainButton.on('pointerout',e=>e.currentTarget.alpha = 1.0); // ditto
     gameOverScene.addChild(playAgainButton);
+
+    //make stats text
+    let statsHeader = new PIXI.Text("Your Stats:")
+    statsHeader.style = new PIXI.TextStyle({
+        align: 'center',
+        fill: 0xFFFFFF,
+        fontSize: 32,
+        fontFamily: "Futura",
+        stroke: 0xFF0000,
+        strokeThickness: 6
+    });
+    statsHeader.x = 100;
+    statsHeader.y = 600;
+    gameOverScene.addChild(statsHeader);
 }
 
+//function that starts the game
 function startGame(){
+    console.log('start game called');
     startScene.visible = false;
     gameOverScene.visible = false;
     gameScene.visible = true;
     score = 0;
+    savedSwimmers = 0;
+    drownedSwimmers = 0;
     life = 100;
     speed = 200;
     increaseScoreBy(0);
@@ -215,40 +271,48 @@ function startGame(){
     loadLevel();
 }
 
+//increase score by input value
 function increaseScoreBy(value){
     score += value;
     scoreLabel.text = `Score: ${score}`;
 }
 
+//decreases life by input value
 function decreaseLifeBy(value){
     life -= value;
     life = parseInt(life);
     lifeLabel.text = `Life: ${life}%`;
 }
 
+//what happens when swimmer is saved
 function SaveSwimmer(swimmer){
     //if swimmer is a Swimmer1 class
     if(swimmer instanceof Swimmer1){
     //change swimmer texture to swimmer1.texture2
     swimmer.texture = app.loader.resources["images/Swimmer1saved.png"].texture;
+    savedSwimmers++;
     }
     //else if swimmer is Swimmer2 class
     else if(swimmer instanceof Swimmer2){
     //change swimmer texture to swimmer2.texture2   
     swimmer.texture = app.loader.resources["images/Swimmer2saved.png"].texture;
+    savedSwimmers++;
+    console.log(savedSwimmers)
     }
 }
 
+//creates buoys
 function createBuoys(numBuoys){
     for(let i=0; i<numBuoys; i++){
         let c = new Buoy(speed);
         c.x = Math.random() * (sceneWidth - 50) + 25;
-        c.y = 0 + 50;
+        c.y = 0 - c.height;
         buoys.push(c);
         gameScene.addChildAt(c, 1);
     }
 }
 
+//creates swimmers
 function createSwimmers(numSwimmers){
     for(let i=0; i < numSwimmers; i++){
         //random float between 0 and 1
@@ -258,29 +322,34 @@ function createSwimmers(numSwimmers){
         //random to determine if male swimmer or female swimmer
         if(randomNumber < 0.5){
             c = new Swimmer1(speed);
+            swimmer1Help.play();
         }
         else if(randomNumber >= .5){
             c = new Swimmer2(speed);
+            swimmer2Help.play();
         }
 
         c.x = Math.random() * (sceneWidth - 50) + 25;
-        c.y = 0 + 50;
+        c.y = 0 - c.height;
         swimmers.push(c);
         gameScene.addChildAt(c, 1);
     }
 }
 
+//create the background
 function createWaves(){
     //create background
 	background = new Waves(speed, sceneWidth, sceneHeight);
     gameScene.addChildAt(background, 0);
 }
 
+//load level
 function loadLevel(){
     createBuoys(1);
     createSwimmers(1);
     createWaves(speed, sceneWidth, sceneHeight);
     paused = false;
+    jetski.play();
 }
 
 function moveLifeGuard(){
@@ -305,10 +374,12 @@ function moveLifeGuard(){
     lifeGuard.boundingBox.y = lifeGuard.y - lifeGuard.boundingBox.height;
 }
 
+//checks for key down
 function keysDown(e){
     keys[e.keyCode] = true;
 }
 
+//checks for key up
 function keysUp(e){
     keys[e.keyCode] = false;
 }
@@ -324,13 +395,60 @@ function end(){
     //remove waves background
     gameScene.removeChild(background);
 
+    //stop playing the jetski sound
+    jetski.stop();
+
+
     //set speed to 0
     speed = 0;
+
+    //create a saved statistic
+    let saved = new PIXI.Text("You saved: " + savedSwimmers + " Swimmers")
+    saved.style = new PIXI.TextStyle({
+        align: 'center',
+        fill: 0xFFFFFF,
+        fontSize: 32,
+        fontFamily: "Futura",
+        stroke: 0xFF0000,
+        strokeThickness: 6
+    });
+    saved.x = 100;
+    saved.y = 700;
+    gameOverScene.addChild(saved);
+
+    //create a not saved statistic
+    let notSaved = new PIXI.Text("You lost: " + drownedSwimmers + " Swimmers")
+    notSaved.style = new PIXI.TextStyle({
+        align: 'center',
+        fill: 0xFFFFFF,
+        fontSize: 32,
+        fontFamily: "Futura",
+        stroke: 0xFF0000,
+        strokeThickness: 6
+    });
+    notSaved.x = 100;
+    notSaved.y = 800;
+    gameOverScene.addChild(notSaved);
+
+    //create a save percentage statistic
+    let savePercent = new PIXI.Text("Your Save Percentage is: " + [[(savedSwimmers) / (savedSwimmers + drownedSwimmers)]*100] + "%")
+    savePercent.style = new PIXI.TextStyle({
+        align: 'center',
+        fill: 0xFFFFFF,
+        fontSize: 32,
+        fontFamily: "Futura",
+        stroke: 0xFF0000,
+        strokeThickness: 6
+    });
+    savePercent.x = 100;
+    savePercent.y = 900;
+    gameOverScene.addChild(savePercent);
 
     gameOverScene.visible = true;
     gameScene.visible = false;
 }
 
+//function to do a collision check between two objects
 function Colliding(a, b){
     if(a.boundingBox.x < b.boundingBox.x + b.boundingBox.width &&
         a.boundingBox.x + a.boundingBox.width > b.boundingBox.x &&
@@ -360,10 +478,10 @@ function gameLoop(){
 	
     //Create extra buoys
     let random = Math.random();
-    if(random <= .0045){
+    if(random <= .0055){
         createBuoys(1);
     }
-    else if(random <= .0035){
+    else if(random <= .0045){
         createBuoys(2);
     }
     
@@ -396,6 +514,11 @@ function gameLoop(){
         if(s.y >= sceneHeight+hb){
             gameScene.removeChild(s);
             s.isAlive = false;
+            if(!s.isSaved){
+                drown.play();
+                drownedSwimmers ++;
+                console.log(drownedSwimmers);
+            }
         }
     }
 
@@ -403,27 +526,41 @@ function gameLoop(){
     background.move();
 	
 	// #5 - Check for Collisions
-	for(let c of buoys){
-        if(Colliding(c, lifeGuard)){
-            if(!c.colliding){
+    //colliding with buoys
+	for(let b of buoys){
+        if(Colliding(b, lifeGuard)){
+            if(!b.colliding){
                 //hit sound.play();
             decreaseLifeBy(20);
-            c.colliding = true;
+            hitBuoy.play();
+            b.colliding = true;
+            //if the lifeguards position is to the left of the buoy
+            if(lifeGuard.boundingBox.x <= b.boundingBox.x + b.boundingBox.width / 2){
+                b.rotation = Math.PI / 10;
+            }
+            else if(lifeGuard.boundingBox.x > b.boundingBox.x + b.boundingBox.width / 2){
+                b.rotation = -Math.PI / 10;
+
+            }
             }
         }
         else{
-            c.colliding = false;
+            b.colliding = false;
+            b.rotation = 0;
         }
     }
 
     //colliding with swimmers
     for(let s of swimmers){
+        //if the swimmer collides with lifeGyard
         if(Colliding(s, lifeGuard)){
+            //and it is not already colliding
             if(!s.colliding && !s.isSaved){
                 increaseScoreBy(25);
                 SaveSwimmer(s);
                 s.colliding = true;
                 s.isSaved = true;
+                saved.play();
             }
         }
         else{
@@ -457,9 +594,20 @@ function gameLoop(){
         increasingSpeed = false;
     }
 
+    //change z index of buoys so player can go under the top of it to show as if behind player
+    for(let b of buoys){
+        if(b.boundingBox.y >= lifeGuard.boundingBox.y + lifeGuard.boundingBox.height){
+            //set index higher than player
+            gameScene.removeChild(b);
+            gameScene.addChildAt(b, 2);
+        }
+    }
+
 	// #6 - Now do some clean up
+    //filter out swimmers dead or off screen
 	swimmers = swimmers.filter(s => s.isAlive);
 
+    //filter out off screen buoys
     buoys = buoys.filter(b => b.isAlive);
 	
 	// #7 - Is game over?

@@ -24,7 +24,7 @@ class LifeGuard extends PIXI.Sprite{
         this.y = y;
         this.speed = 10;
         
-        this.boundingBox = new PIXI.Rectangle(this.x-15, this.y-120, 110, 260);
+        this.boundingBox = new PIXI.Rectangle(this.x-15, this.y-120, 110, 230);
 
         //DRAWING COLLISION BOXES
         // let box = new PIXI.Graphics();
@@ -39,6 +39,7 @@ class Buoy extends PIXI.Sprite{
         super(app.loader.resources["images/Buoy.png"].texture);
         this.anchor.set(.5, .5);
         this.scale.set(1);
+        this.rotation = 0;
         this.x = x;
         this.y = y;
         this.fwd = getUnitVector();
