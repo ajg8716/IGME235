@@ -7,27 +7,15 @@ const canvas = document.getElementById('mycanvas');
 const app = new PIXI.Application({
     view: canvas,
     width: 1000,
-    height: 1100,
-    resolution: window.devicePixelRatio,
+    height: 800,
+    resolution: 1,
     autoDensity: true,
 });
 document.body.appendChild(app.view);
 
-
-window.addEventListener('resize', resize );
-
-function resize(){
-    let screenWidth = window.innerWidth;
-    let screenHeight = window.innerHeight;
-
-    app.resize(screenWidth, screenHeight);
-}
-
-resize();
-
 // constants
-const sceneWidth = app.view.width;
-const sceneHeight = app.view.height;	
+let sceneWidth = 0;
+let sceneHeight = 0;
 
 // aliases
 let stage;
@@ -37,6 +25,8 @@ let startScene;
 let lifeGuard;
 let gameScene,scoreLabel,lifeLabel;
 let gameOverScene;
+
+let savedS, notSavedS, savePercent;
 
 //sounds
 let swimmer1Help;
@@ -83,6 +73,15 @@ app.loader.onComplete.add(setup);
 app.loader.load();
 
 function setup() {
+
+console.log(app.renderer.width);
+console.log(app.renderer.height);
+
+    sceneHeight = app.view.height;
+    console.log("sceneheight" + sceneHeight);
+    sceneWidth = app.view.width;
+    console.log("scenewidth" + sceneWidth);
+
 	stage = app.stage;
 	// #1 - Create the `start` scene
     startScene = new PIXI.Container();
@@ -179,7 +178,7 @@ function createLabelsAndButtons(){
     let startButton = new PIXI.Text("Start");
     startButton.style = buttonStyle;
     startButton.x = sceneWidth / 2;
-    startButton.y = sceneHeight - 400;
+    startButton.y = sceneHeight - 100;
     startButton.interactive = true;
     startButton.buttonMode = true;
     startButton.on("pointerup", startGame);
@@ -223,8 +222,50 @@ function createLabelsAndButtons(){
     });
     gameOverText.style = textStyle;
     gameOverText.x = 100;
-    gameOverText.y = sceneHeight/2 - 160;
+    gameOverText.y = sceneHeight - 500;
     gameOverScene.addChild(gameOverText);
+
+    //create a saved statistic
+    savedS = new PIXI.Text()
+    savedS.style = new PIXI.TextStyle({
+        align: 'center',
+        fill: 0xFFFFFF,
+        fontSize: 32,
+        fontFamily: "Futura",
+        stroke: 0xFF0000,
+        strokeThickness: 6
+    });
+    savedS.x = 100;
+    savedS.y = sceneHeight - 400;
+    gameOverScene.addChild(savedS);
+
+    //create a not saved statistic
+    notSavedS = new PIXI.Text()
+    notSavedS.style = new PIXI.TextStyle({
+        align: 'center',
+        fill: 0xFFFFFF,
+        fontSize: 32,
+        fontFamily: "Futura",
+        stroke: 0xFF0000,
+        strokeThickness: 6
+    });
+    notSavedS.x = 100;
+    notSavedS.y = sceneHeight - 300;
+    gameOverScene.addChild(notSavedS);
+
+    //create a save percentage statistic
+    savePercent = new PIXI.Text()
+    savePercent.style = new PIXI.TextStyle({
+        align: 'center',
+        fill: 0xFFFFFF,
+        fontSize: 32,
+        fontFamily: "Futura",
+        stroke: 0xFF0000,
+        strokeThickness: 6
+    });
+    savePercent.x = 100;
+    savePercent.y = sceneHeight - 200;
+    gameOverScene.addChild(savePercent);
 
     // 3B - make "play again?" button
     let playAgainButton = new PIXI.Text("Play Again?");
@@ -263,7 +304,7 @@ function startGame(){
     savedSwimmers = 0;
     drownedSwimmers = 0;
     life = 100;
-    speed = 200;
+    speed = 150;
     increaseScoreBy(0);
     decreaseLifeBy(0);
     lifeGuard.x = 600;
@@ -339,7 +380,7 @@ function createSwimmers(numSwimmers){
 //create the background
 function createWaves(){
     //create background
-	background = new Waves(speed, sceneWidth, sceneHeight);
+	background = new Waves(sceneWidth, sceneHeight);
     gameScene.addChildAt(background, 0);
 }
 
@@ -347,7 +388,7 @@ function createWaves(){
 function loadLevel(){
     createBuoys(1);
     createSwimmers(1);
-    createWaves(speed, sceneWidth, sceneHeight);
+    createWaves(sceneWidth, sceneHeight);
     paused = false;
     jetski.play();
 }
@@ -385,6 +426,9 @@ function keysUp(e){
 }
 
 function end(){
+    gameOverScene.visible = true;
+    gameScene.visible = false;
+    
     //clear lists of buoys and swimmers
     buoys.forEach(c => gameScene.removeChild(c));
     buoys = [];
@@ -402,50 +446,18 @@ function end(){
     //set speed to 0
     speed = 0;
 
-    //create a saved statistic
-    let saved = new PIXI.Text("You saved: " + savedSwimmers + " Swimmers")
-    saved.style = new PIXI.TextStyle({
-        align: 'center',
-        fill: 0xFFFFFF,
-        fontSize: 32,
-        fontFamily: "Futura",
-        stroke: 0xFF0000,
-        strokeThickness: 6
-    });
-    saved.x = 100;
-    saved.y = 700;
-    gameOverScene.addChild(saved);
+    //update stats
 
-    //create a not saved statistic
-    let notSaved = new PIXI.Text("You lost: " + drownedSwimmers + " Swimmers")
-    notSaved.style = new PIXI.TextStyle({
-        align: 'center',
-        fill: 0xFFFFFF,
-        fontSize: 32,
-        fontFamily: "Futura",
-        stroke: 0xFF0000,
-        strokeThickness: 6
-    });
-    notSaved.x = 100;
-    notSaved.y = 800;
-    gameOverScene.addChild(notSaved);
+    //saved stat
+    savedS.text = `You Saved: ${savedSwimmers} Swimmers`;
 
-    //create a save percentage statistic
-    let savePercent = new PIXI.Text("Your Save Percentage is: " + [[(savedSwimmers) / (savedSwimmers + drownedSwimmers)]*100] + "%")
-    savePercent.style = new PIXI.TextStyle({
-        align: 'center',
-        fill: 0xFFFFFF,
-        fontSize: 32,
-        fontFamily: "Futura",
-        stroke: 0xFF0000,
-        strokeThickness: 6
-    });
-    savePercent.x = 100;
-    savePercent.y = 900;
-    gameOverScene.addChild(savePercent);
+    //lost stat
+    notSavedS.text = `You Lost: ${drownedSwimmers} Swimmers`;
 
-    gameOverScene.visible = true;
-    gameScene.visible = false;
+    //save percentage
+    let savePercentage = [(savedSwimmers) / (savedSwimmers + drownedSwimmers)]*100;
+
+    savePercent.text = `Your Save Percentage Is: ${savePercent}%`;
 }
 
 //function to do a collision check between two objects
@@ -478,10 +490,10 @@ function gameLoop(){
 	
     //Create extra buoys
     let random = Math.random();
-    if(random <= .0055){
+    if(random <= .0025){
         createBuoys(1);
     }
-    else if(random <= .0045){
+    else if(random <= .0015){
         createBuoys(2);
     }
     
@@ -582,10 +594,8 @@ function gameLoop(){
             for(let s of swimmers){
                 s.speed = speed;
             }
-            //increase speed of lifeGuard
-            lifeGuard.speed += 1;
             //increase speed of background
-            background.speed = speed;
+            background.speed += 25;
             //set increasing speed to true
             increasingSpeed = true;
         }   
