@@ -1,9 +1,9 @@
 class Waves extends PIXI.TilingSprite{
-    constructor(speed, width, height){
+    constructor(width, height){
         super(app.loader.resources["images/waves.png"].texture, width, height);
         this.position.set(0,0);
         this.rotation = 0;
-        this.speed = speed;
+        this.speed = 45;
         this.fwd = getUnitVector();
         stage.addChild(this);
     }
@@ -22,7 +22,7 @@ class LifeGuard extends PIXI.Sprite{
         this.rotation = 0;
         this.x = x;
         this.y = y;
-        this.speed = 10;
+        this.speed = 5;
         
         this.boundingBox = new PIXI.Rectangle(this.x-15, this.y-120, 110, 230);
 
